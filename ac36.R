@@ -37,8 +37,8 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "RR4", "R03", "2021-01-24", NA, NA, "IT", "US", NA, NA, NA, NA, "Cancelled",
                 "PC", "SF", "R01", "2021-01-29", "C", 8, "US", "IT", "IT", "26'42", "2'43", 3044, NA, # best of 7 vvv of RR seeds 2 & 3
                 "PC", "SF", "R02", "2021-01-29", "C", 8, "IT", "US", "IT", "26'57", "3'07", 3206, NA,
-                "PC", "SF", "R03", "2021-01-30", NA, NA, "IT", "US", NA, NA, NA, NA, NA,
-                "PC", "SF", "R04", "2021-01-30", NA, NA, "US", "IT", NA, NA, NA, NA, NA,
+                "PC", "SF", "R03", "2021-01-30", "A", 6, "IT", "US", "IT", "26'08", "0'34", 549, NA,
+                "PC", "SF", "R04", "2021-01-30", "A", 6, "US", "IT", "IT", "23'30", "3'51", 3478, NA,
                 "PC", "SF", "R05", "2021-01-31", NA, NA, "US", "IT", NA, NA, NA, NA, NA,
                 "PC", "SF", "R06", "2021-01-31", NA, NA, "IT", "US", NA, NA, NA, NA, NA,
                 "PC", "SF", "R07", "2021-02-02", NA, NA, "US", "IT", NA, NA, NA, NA, NA,
