@@ -39,22 +39,22 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "SF", "R02", "2021-01-29", "C", 8, "IT", "US", "IT", "26'57", "3'07", 3206, NA,
                 "PC", "SF", "R03", "2021-01-30", "A", 6, "IT", "US", "IT", "26'08", "0'34", 549, NA,
                 "PC", "SF", "R04", "2021-01-30", "A", 6, "US", "IT", "IT", "23'30", "3'51", 3478, NA,
-                "PC", "SF", "R05", "2021-01-31", NA, NA, "US", "IT", NA, NA, NA, NA, NA,
-                "PC", "SF", "R06", "2021-01-31", NA, NA, "IT", "US", NA, NA, NA, NA, NA,
-                "PC", "SF", "R07", "2021-02-02", NA, NA, "US", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R01", "2021-02-13", NA, NA, "UK", NA, NA, NA, NA, NA, NA, # best of 13 vvv of RR & SF winners
-                "PC", "F", "R02", "2021-02-13", NA, NA, NA, "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R03", "2021-02-14", NA, NA, "UK", NA, NA, NA, NA, NA, NA,
-                "PC", "F", "R04", "2021-02-14", NA, NA, NA, "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R05", "2021-02-17", NA, NA, "UK", NA, NA, NA, NA, NA, NA,
-                "PC", "F", "R06", "2021-02-17", NA, NA, NA, "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R07", "2021-02-19", NA, NA, "UK", NA, NA, NA, NA, NA, NA,
-                "PC", "F", "R08", "2021-02-19", NA, NA, NA, "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R09", "2021-02-20", NA, NA, "UK", NA, NA, NA, NA, NA, NA,
-                "PC", "F", "R10", "2021-02-20", NA, NA, NA, "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R11", "2021-02-21", NA, NA, "UK", NA, NA, NA, NA, NA, NA,
-                "PC", "F", "R12", "2021-02-21", NA, NA, NA, "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R13", "2021-02-22", NA, NA, "UK", NA, NA, NA, NA, NA, NA)
+                "PC", "SF", "R05", "2021-01-31", NA, NA, "US", "IT", NA, NA, NA, NA, "IT wins Series 4-0",
+                "PC", "SF", "R06", "2021-01-31", NA, NA, "IT", "US", NA, NA, NA, NA, "IT wins Series 4-0",
+                "PC", "SF", "R07", "2021-02-02", NA, NA, "US", "IT", NA, NA, NA, NA, "IT wins Series 4-0",
+                "PC", "F", "R01", "2021-02-13", NA, NA, "UK", "IT", NA, NA, NA, NA, NA, # best of 13 vvv of RR & SF winners
+                "PC", "F", "R02", "2021-02-13", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R03", "2021-02-14", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R04", "2021-02-14", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R05", "2021-02-17", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R06", "2021-02-17", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R07", "2021-02-19", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R08", "2021-02-19", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R09", "2021-02-20", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R10", "2021-02-20", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R11", "2021-02-21", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R12", "2021-02-21", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R13", "2021-02-22", NA, NA, "UK", "IT", NA, NA, NA, NA, NA)
 
 ac36 <- ac36 %>%
   mutate(Date = ymd(Date)) %>% # convert Date
