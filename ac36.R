@@ -42,8 +42,8 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "SF", "R05", "2021-01-31", NA, NA, "US", "IT", NA, NA, NA, NA, "IT wins Series 4-0",
                 "PC", "SF", "R06", "2021-01-31", NA, NA, "IT", "US", NA, NA, NA, NA, "IT wins Series 4-0",
                 "PC", "SF", "R07", "2021-02-02", NA, NA, "US", "IT", NA, NA, NA, NA, "IT wins Series 4-0",
-                "PC", "F", "R01", "2021-02-13", NA, NA, "UK", "IT", NA, NA, NA, NA, NA, # best of 13 vvv of RR & SF winners
-                "PC", "F", "R02", "2021-02-13", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R01", "2021-02-13", "A", 6, "UK", "IT", "IT", "26'27", "1'51", 1635, NA, # best of 13 vvv of RR & SF winners
+                "PC", "F", "R02", "2021-02-13", "A", 6, "IT", "UK", "IT", "21'44", "0'26", 479, NA,
                 "PC", "F", "R03", "2021-02-14", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
                 "PC", "F", "R04", "2021-02-14", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
                 "PC", "F", "R05", "2021-02-17", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
@@ -91,10 +91,12 @@ ac36 %>%
   complete(Winner = ac36_teams$ID, fill = list(Pts = 0)) %>% 
   group_by(Winner) %>% 
   mutate(Pts = cumsum(Pts)) %>% 
-  ungroup() %>% 
+  ungroup() -> tmp
+tmp %>% 
+  add_row(Round = " ", Winner = unique(pull(tmp, Winner)), Pts = 0, .before = 1) %>% 
   left_join(ac36_teams, by = c("Winner" = "ID")) %>% 
   ggplot(mapping = aes(x = Round, y = Pts, group = Team, color = Team)) +
-  geom_line(size = 2.5, show.legend = FALSE) +
+  geom_line(size = 2.5, alpha = .9, show.legend = FALSE) +
   geom_point(size = 7.5, color = "white") +
   geom_point(size = 5, alpha = .5, show.legend = FALSE) +
   scale_color_manual(values = cols) +
@@ -113,7 +115,9 @@ ac36 %>%
   complete(Winner =  c("IT", "UK", "US"), fill = list(Pts = 0)) %>% # Teams competing
   group_by(Winner) %>% 
   mutate(Pts = cumsum(Pts)) %>% 
-  ungroup() %>% 
+  ungroup() -> tmp
+tmp %>% 
+  add_row(Round = " ", Winner = unique(pull(tmp, Winner)), Pts = 0, .before = 1) %>% 
   left_join(ac36_teams %>% filter(ID != "NZ"), by = c("Winner" = "ID")) %>% 
   ggplot(mapping = aes(x = Round, y = Pts, group = Team, color = Team)) +
   geom_line(size = 2.5, show.legend = FALSE) +
@@ -135,7 +139,9 @@ ac36 %>%
   complete(Winner = c("IT", "US"), fill = list(Pts = 0)) %>% # Teams competing
   group_by(Winner) %>% 
   mutate(Pts = cumsum(Pts)) %>% 
-  ungroup() %>% 
+  ungroup() -> tmp
+tmp %>% 
+  add_row(Race = " ", Winner = unique(pull(tmp, Winner)), Pts = 0, .before = 1) %>% 
   left_join(ac36_teams %>% filter(ID != "NZ"), by = c("Winner" = "ID")) %>% 
   ggplot(mapping = aes(x = Race, y = Pts, group = Team, color = Team)) +
   geom_hline(yintercept = 4, size = 2, color = "grey75", linetype = "dashed") +
@@ -149,37 +155,39 @@ ac36 %>%
   theme_minimal() -> p3
 
 ### Prada Cup Finals
-# ac36 %>%
-#   filter(Cup == "PC", !is.na(Winner), Round == "F") %>%
-#   select(Race, Winner) %>%
-#   bind_cols(Pts = 1) %>% 
-#   group_by(Race, Winner) %>%
-#   summarise(Pts = sum(Pts), .groups = "drop_last") %>% 
-#   complete(Winner = c("UK", NA), fill = list(Pts = 0)) %>% # Teams competing
-#   group_by(Winner) %>% 
-#   mutate(Pts = cumsum(Pts)) %>% 
-#   ungroup() %>% 
-#   left_join(ac36_teams %>% filter(ID != "NZ"), by = c("Winner" = "ID")) %>% 
-#   ggplot(mapping = aes(x = Race, y = Pts, group = Team, color = Team)) +
-#   geom_hline(yintercept = 7, size = 2, color = "grey75", linetype = "dashed") +
-#   geom_line(size = 2.5, show.legend = FALSE) +
-#   geom_point(size = 7.5, color = "white") +
-#   geom_point(size = 5, alpha = .5, show.legend = FALSE) +
-#   scale_color_manual(values = cols) +
-#   scale_x_discrete(name = "Standings after ...", expand = c(.025, .025)) +
-#   scale_y_continuous(name = "Points", minor_breaks = NULL) +
-#   labs(title = "2021 Prada Cup Final (best-of-13)") +
-#   theme_minimal() -> p4
+ac36 %>%
+  filter(Cup == "PC", !is.na(Winner), Round == "F") %>%
+  select(Race, Winner) %>%
+  bind_cols(Pts = 1) %>%
+  group_by(Race, Winner) %>%
+  summarise(Pts = sum(Pts), .groups = "drop_last") %>%
+  complete(Winner = c("UK", NA), fill = list(Pts = 0)) %>% # Teams competing
+  group_by(Winner) %>%
+  mutate(Pts = cumsum(Pts)) %>%
+  ungroup() -> tmp
+tmp %>% 
+  add_row(Race = " ", Winner = unique(pull(tmp, Winner)), Pts = 0, .before = 1) %>%
+  left_join(ac36_teams %>% filter(ID != "NZ"), by = c("Winner" = "ID")) %>%
+  ggplot(mapping = aes(x = Race, y = Pts, group = Team, color = Team)) +
+  geom_hline(yintercept = 7, size = 2, color = "grey75", linetype = "dashed") +
+  geom_line(size = 2.5, show.legend = FALSE) +
+  geom_point(size = 7.5, color = "white") +
+  geom_point(size = 5, alpha = .5, show.legend = FALSE) +
+  scale_color_manual(values = cols) +
+  scale_x_discrete(name = "Standings after ...", expand = c(.025, .025)) +
+  scale_y_continuous(name = "Points", minor_breaks = NULL) +
+  labs(title = "2021 Prada Cup Final (best-of-13)") +
+  theme_minimal() -> p4
 
 windows(16, 9)
-gridExtra::grid.arrange(grobs = list(p0, p1, p2, p3),
-                        layout_matrix = rbind(c(1,1,1,1,1,1,1,1),
-                                              c(2,2,3,3,4,4,4,4),
-                                              c(2,2,3,3,4,4,4,4),
-                                              c(2,2,3,3,4,4,4,4),
-                                              c(5,5,5,5,6,6,6,6),
-                                              c(5,5,5,5,6,6,6,6),
-                                              c(5,5,5,5,6,6,6,6))
+gridExtra::grid.arrange(grobs = list(p0, p1, p2, p3, p4),
+                        layout_matrix = rbind(c(1,1,1,1,1,1,1,1,1,1),
+                                              c(2,2,2,3,3,3,4,4,4,4),
+                                              c(2,2,2,3,3,3,4,4,4,4),
+                                              c(2,2,2,3,3,3,4,4,4,4),
+                                              c(5,5,5,5,5,6,6,6,6,6),
+                                              c(5,5,5,5,5,6,6,6,6,6),
+                                              c(5,5,5,5,5,6,6,6,6,6))
 )
 
-rm(p0, p1, p2, p3, cols)
+rm(p0, p1, p2, p3, p4, tmp, cols)
