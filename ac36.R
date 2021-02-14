@@ -44,8 +44,8 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "SF", "R07", "2021-02-02", NA, NA, "US", "IT", NA, NA, NA, NA, "IT wins Series 4-0",
                 "PC", "F", "R01", "2021-02-13", "A", 6, "UK", "IT", "IT", "26'27", "1'51", 1635, NA, # best of 13 vvv of RR & SF winners
                 "PC", "F", "R02", "2021-02-13", "A", 6, "IT", "UK", "IT", "21'44", "0'26", 479, NA,
-                "PC", "F", "R03", "2021-02-14", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R04", "2021-02-14", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R03", "2021-02-14", "E", 6, "IT", "UK", "IT", "25'40", "0'13", 186, NA,
+                "PC", "F", "R04", "2021-02-14", "E", 6, "UK", "IT", "IT", "25'01", "0'41", 781, NA,
                 "PC", "F", "R05", "2021-02-17", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
                 "PC", "F", "R06", "2021-02-17", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
                 "PC", "F", "R07", "2021-02-19", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
