@@ -46,15 +46,15 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "F", "R02", "2021-02-13", "A", 6, "IT", "UK", "IT", "21'44", "0'26", 479, NA,
                 "PC", "F", "R03", "2021-02-14", "E", 6, "IT", "UK", "IT", "25'40", "0'13", 186, NA,
                 "PC", "F", "R04", "2021-02-14", "E", 6, "UK", "IT", "IT", "25'01", "0'41", 781, NA,
-                "PC", "F", "R05", "2021-02-17", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R06", "2021-02-17", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R07", "2021-02-19", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R08", "2021-02-19", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R09", "2021-02-20", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R10", "2021-02-20", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R11", "2021-02-21", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R12", "2021-02-21", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R13", "2021-02-22", NA, NA, "UK", "IT", NA, NA, NA, NA, NA)
+                "PC", "F", "R05", "2021-02-20", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R06", "2021-02-20", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R07", "2021-02-21", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R08", "2021-02-21", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R09", "2021-02-22", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R10", "2021-02-22", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R11", "2021-02-23", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
+                "PC", "F", "R12", "2021-02-23", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
+                "PC", "F", "R13", "2021-02-24", NA, NA, "UK", "IT", NA, NA, NA, NA, NA)
 
 ac36 <- ac36 %>%
   mutate(Date = ymd(Date)) %>% # convert Date
