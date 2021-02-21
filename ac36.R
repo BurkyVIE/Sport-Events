@@ -48,13 +48,26 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "F", "R04", "2021-02-14", "E", 6, "UK", "IT", "IT", "25'01", "0'41", 781, NA,
                 "PC", "F", "R05", "2021-02-17", "E", 6, "UK", "IT", "IT", "28'19", "1'20", 1150, NA,
                 "PC", "F", "R06", "2021-02-17", "E", 6, "IT", "UK", "UK", "26'20", "0'14", 162, NA,
-                "PC", "F", "R07", "2021-02-19", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R08", "2021-02-19", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R09", "2021-02-20", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R10", "2021-02-20", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R11", "2021-02-21", NA, NA, "IT", "UK", NA, NA, NA, NA, NA,
-                "PC", "F", "R12", "2021-02-21", NA, NA, "UK", "IT", NA, NA, NA, NA, NA,
-                "PC", "F", "R13", "2021-02-22", NA, NA, "UK", "IT", NA, NA, NA, NA, NA)
+                "PC", "F", "R07", "2021-02-19", NA, NA, "IT", "UK", "IT", NA, NA, NA, NA,
+                "PC", "F", "R08", "2021-02-19", NA, NA, "UK", "IT", "IT", NA, NA, NA, NA,
+                "PC", "F", "R09", "2021-02-20", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
+                "PC", "F", "R10", "2021-02-20", NA, NA, "IT", "UK", NA, NA, NA, NA, "IT wins Series 7-1",
+                "PC", "F", "R11", "2021-02-21", NA, NA, "IT", "UK", NA, NA, NA, NA, "IT wins Series 7-1",
+                "PC", "F", "R12", "2021-02-21", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
+                "PC", "F", "R13", "2021-02-22", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
+                "AC", NA, "R01", "", NA, NA, "", "", NA, NA, NA, NA, NA,  # best of 13 vvv
+                "AC", NA, "R02", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R03", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R04", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R05", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R06", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R07", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R08", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R09", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R10", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R11", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R12", "", NA, NA, "", "", NA, NA, NA, NA, NA,
+                "AC", NA, "R13", "", NA, NA, "", "", NA, NA, NA, NA, NA)
 
 ac36 <- ac36 %>%
   mutate(Date = ymd(Date)) %>% # convert Date
