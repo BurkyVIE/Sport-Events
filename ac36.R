@@ -55,19 +55,19 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "F", "R11", "2021-02-23", NA, NA, "IT", "UK", NA, NA, NA, NA, "IT wins Series 7-1",
                 "PC", "F", "R12", "2021-02-23", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
                 "PC", "F", "R13", "2021-02-24", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
-                "AC", NA, "R01", "2021-03-06", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,  # best of 13 vvv of PC winner and defender
-                "AC", NA, "R02", "2021-03-06", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R03", "2021-03-07", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R04", "2021-03-07", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R05", "2021-03-10", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R06", "2021-03-10", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R07", "2021-03-12", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R08", "2021-03-12", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R09", "2021-03-13", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R10", "2021-03-13", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R11", "2021-03-14", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R12", "2021-03-14", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R13", "2021-03-15", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA)
+                "AC", NA, "R01", "2021-03-06", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,  # best of 13 vvv of PC winner and defender
+                "AC", NA, "R02", "2021-03-06", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R03", "2021-03-07", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R04", "2021-03-07", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R05", "2021-03-10", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R06", "2021-03-10", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R07", "2021-03-12", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R08", "2021-03-12", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R09", "2021-03-13", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R10", "2021-03-13", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R11", "2021-03-14", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R12", "2021-03-14", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R13", "2021-03-15", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA)
 
 ac36 <- ac36 %>%
   mutate(Date = ymd(Date)) %>% # convert Date
@@ -193,32 +193,32 @@ tmp %>%
   theme_minimal() -> p4
 
 ### America's Cup
-# ac36 %>%
-#   filter(Cup == "AC", !is.na(Winner)) %>%
-#   select(Race, Winner) %>%
-#   bind_cols(Pts = 1) %>%
-#   group_by(Race, Winner) %>%
-#   summarise(Pts = sum(Pts), .groups = "drop_last") %>%
-#   complete(Winner = c("NZ", "IT"), fill = list(Pts = 0)) %>% # Teams competing
-#   group_by(Winner) %>%
-#   mutate(Pts = cumsum(Pts)) %>%
-#   ungroup() -> tmp
-# tmp %>% 
-#   add_row(Race = " ", Winner = unique(pull(tmp, Winner)), Pts = 0, .before = 1) %>%
-#   left_join(ac36_teams, by = c("Winner" = "ID")) %>%
-#   ggplot(mapping = aes(x = Race, y = Pts, group = Team, color = Team)) +
-#   geom_hline(yintercept = 7, size = 2, color = "grey75", linetype = "dashed") +
-#   geom_line(size = 2.5, show.legend = FALSE) +
-#   geom_point(size = 7.5, color = "white") +
-#   geom_point(size = 5, alpha = .5, show.legend = FALSE) +
-#   scale_color_manual(values = cols) +
-#   scale_x_discrete(name = "Standings after ...", expand = c(.025, .025)) +
-#   scale_y_continuous(name = "Points", minor_breaks = NULL) +
-#   labs(title = "2021 Prada Cup Final (best-of-13)") +
-#   theme_minimal() -> p5
+ac36 %>%
+  filter(Cup == "AC", !is.na(Winner)) %>%
+  select(Race, Winner) %>%
+  bind_cols(Pts = 1) %>%
+  group_by(Race, Winner) %>%
+  summarise(Pts = sum(Pts), .groups = "drop_last") %>%
+  complete(Winner = c("NZ", "IT"), fill = list(Pts = 0)) %>% # Teams competing
+  group_by(Winner) %>%
+  mutate(Pts = cumsum(Pts)) %>%
+  ungroup() -> tmp
+tmp %>%
+  add_row(Race = " ", Winner = unique(pull(tmp, Winner)), Pts = 0, .before = 1) %>%
+  left_join(ac36_teams, by = c("Winner" = "ID")) %>%
+  ggplot(mapping = aes(x = Race, y = Pts, group = Team, color = Team)) +
+  geom_hline(yintercept = 7, size = 2, color = "grey75", linetype = "dashed") +
+  geom_line(size = 2.5, show.legend = FALSE) +
+  geom_point(size = 7.5, color = "white") +
+  geom_point(size = 5, alpha = .5, show.legend = FALSE) +
+  scale_color_manual(values = cols) +
+  scale_x_discrete(name = "Standings after ...", expand = c(.025, .025)) +
+  scale_y_continuous(name = "Points", minor_breaks = NULL) +
+  labs(title = "2021 Prada Cup Final (best-of-13)") +
+  theme_minimal() -> p5
 
 windows(16, 9)
-gridExtra::grid.arrange(grobs = list(p0, p1, p2, p3, p4),
+gridExtra::grid.arrange(grobs = list(p0, p1, p2, p3, p4, p5),
                         layout_matrix = rbind(c(1,1,1,1,1,1,1,1,1,1),
                                               c(2,2,2,3,3,3,4,4,4,4),
                                               c(2,2,2,3,3,3,4,4,4,4),
@@ -228,4 +228,4 @@ gridExtra::grid.arrange(grobs = list(p0, p1, p2, p3, p4),
                                               c(5,5,5,5,5,6,6,6,6,6))
 )
 
-rm(p0, p1, p2, p3, p4, tmp, cols)
+rm(p0, p1, p2, p3, p4, p5, tmp, cols)
