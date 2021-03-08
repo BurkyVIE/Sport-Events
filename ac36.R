@@ -55,19 +55,19 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "PC", "F", "R11", "2021-02-23", NA, NA, "IT", "UK", NA, NA, NA, NA, "IT wins Series 7-1",
                 "PC", "F", "R12", "2021-02-23", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
                 "PC", "F", "R13", "2021-02-24", NA, NA, "UK", "IT", NA, NA, NA, NA, "IT wins Series 7-1",
-                "AC", NA, "R01", "2021-03-06", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,  # best of 13 vvv of PC winner and defender
-                "AC", NA, "R02", "2021-03-06", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R03", "2021-03-07", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R04", "2021-03-07", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R05", "2021-03-10", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R06", "2021-03-10", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R07", "2021-03-12", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R08", "2021-03-12", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R09", "2021-03-13", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R10", "2021-03-13", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R11", "2021-03-14", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R12", "2021-03-14", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R13", "2021-03-15", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA)
+                "AC", NA, "R01", "2021-03-10", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,  # best of 13 vvv of PC winner and defender
+                "AC", NA, "R02", "2021-03-10", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R03", "2021-03-12", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R04", "2021-03-12", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R05", "2021-03-13", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R06", "2021-03-13", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R07", "2021-03-14", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R08", "2021-03-14", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R09", "2021-03-15", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R10", "2021-03-15", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R11", "2021-03-16", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R12", "2021-03-16", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R13", "2021-03-17", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA)
 
 ac36 <- ac36 %>%
   mutate(Date = ymd(Date)) %>% # convert Date
