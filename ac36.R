@@ -59,15 +59,15 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "AC", NA, "R02", "2021-03-10", "E", 6, "IT", "NZ", "IT", "24'41", "0'07", 139, NA,
                 "AC", NA, "R03", "2021-03-12", "E", 6, "IT", "NZ", "IT", "27'18", "0'37", 438, NA,
                 "AC", NA, "R04", "2021-03-12", "E", 6, "NZ", "IT", "NZ", "29'53", "1'03", 676, NA,
-                "AC", NA, "R05", "2021-03-13", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R06", "2021-03-13", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R07", "2021-03-14", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R08", "2021-03-14", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R09", "2021-03-15", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R10", "2021-03-15", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R11", "2021-03-16", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
-                "AC", NA, "R12", "2021-03-16", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
-                "AC", NA, "R13", "2021-03-17", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA)
+                "AC", NA, "R05", "2021-03-13", "A", 6, "NZ", "IT", "IT", "29'04", "0'18", 197, NA,
+                "AC", NA, "R06", "2021-03-13", "A", 6, "IT", "NZ", "NZ", "27'26", "1'41", 1405, NA,
+                "AC", NA, "R07", "2021-03-15", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R08", "2021-03-15", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R09", "2021-03-16", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R10", "2021-03-16", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R11", "2021-03-17", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R12", "2021-03-17", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
+                "AC", NA, "R13", "2021-03-18", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA)
 
 ac36 <- ac36 %>%
   mutate(Date = ymd(Date)) %>% # convert Date
