@@ -5,8 +5,8 @@ library(lubridate)
 # https://en.wikipedia.org/wiki/2021_Prada_Cup
 
 ac36_teams <- tribble(~ID, ~Team, ~Club, ~Yacht,
-                      "NZ", "Emirates Team New Zealand", "Royal New Zealand Yacht Squadron", "Te Rehutai / Sea Spray",
-                      "IT", "Luna Rossa Prada Pirelli Team", "Circolo della Vela Sicilia", "Luna Rossa",
+                      "NZ", "Emirates Team New Zealand", "Royal New Zealand Yacht Squadron", "Te Rehutai",
+                      "IT", "Luna Rossa Prada Pirelli", "Circolo della Vela Sicilia", "Luna Rossa",
                       "US", "American Magic", "New York Yacht Club", "Patriot",
                       "UK", "Ineos Team UK", "Royal Yacht Squadron", "Britannia II")
 
