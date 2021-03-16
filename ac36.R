@@ -64,7 +64,7 @@ ac36 <- tribble(~Cup, ~Round, ~Race, ~Date, ~Course, ~Legs, ~Port, ~Stbd, ~Winne
                 "AC", NA, "R07", "2021-03-15", "E", 6, "IT", "NZ", "NZ", "25'17", "0'58", 829, NA,
                 "AC", NA, "R08", "2021-03-15", "E", 5, "NZ", "IT", "NZ", "38'57", "3'55", 1793, NA,
                 "AC", NA, "R09", "2021-03-16", "C", 6, "NZ", "IT", "NZ", "25'29", "0'30", 483, NA,
-                "AC", NA, "R10", "2021-03-16", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
+                "AC", NA, "R10", "2021-03-16", NA, NA, "IT", "NZ", NA, NA, NA, NA, "Cancelled",
                 "AC", NA, "R11", "2021-03-17", NA, NA, "IT", "NZ", NA, NA, NA, NA, NA,
                 "AC", NA, "R12", "2021-03-17", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA,
                 "AC", NA, "R13", "2021-03-18", NA, NA, "NZ", "IT", NA, NA, NA, NA, NA)
