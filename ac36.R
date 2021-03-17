@@ -3,6 +3,7 @@ library(lubridate)
 
 # https://en.wikipedia.org/wiki/2019-20_America's_Cup_World_Series
 # https://en.wikipedia.org/wiki/2021_Prada_Cup
+# https://en.wikipedia.org/wiki/2021_America%27s_Cup
 
 ac36_teams <- tribble(~ID, ~Team, ~Club, ~Yacht,
                       "NZ", "Emirates Team New Zealand", "Royal New Zealand Yacht Squadron", "Te Rehutai",
