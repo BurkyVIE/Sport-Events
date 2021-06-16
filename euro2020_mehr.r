@@ -2,7 +2,7 @@
 require(tidyverse)
 library(patchwork)
 
-colors <- c("orangered", "gold", "forestgreen", RColorBrewer::brewer.pal(9, "YlGn")[9:2]) %>%  # penalty + own goal + regular + 8 sequential
+colors <- c("firebrick", "gold", "forestgreen", RColorBrewer::brewer.pal(9, "YlGn")[9:2]) %>%  # penalty + own goal + regular + 8 sequential
   set_names(c("Penalty", "Own Goal", "Regular", "(105,120]", "(90,105]", "(75,90]", "(60,75]", "(45,60]", "(30,45]", "(15,30]", "(0,15]"))
 
 # data ----
@@ -212,7 +212,7 @@ ggplot(goals, mapping = aes(x = 1)) +
   scale_fill_manual(name = "", values = colors) +
   coord_polar(theta = "y") +
   theme_minimal() +
-  theme(legend.position = "left",
+  theme(legend.position = "top",
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         axis.title = element_blank(),
@@ -247,7 +247,7 @@ games_played %>%
   rowid_to_column(var = "Rank") %>% 
   ggplot(mapping = aes(x = reorder(FIFA, Rank, sum))) +
   geom_bar(mapping = aes(y = For), stat = "identity", fill = "forestgreen") +
-  geom_bar(mapping = aes(y = -Against), stat = "identity", fill = "orangered") +
+  geom_bar(mapping = aes(y = -Against), stat = "identity", fill = "firebrick") +
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
   geom_point(mapping = aes(x = Rank, y = Diff), stroke = 2, shape = 4, color = "gold") +
   geom_text(mapping = aes(x = Rank, label = reorder(FIFA, Rank, sum)), y = 0, size = 3.5) +
