@@ -61,17 +61,17 @@ locations <- tribble(~City, ~Stadium, ~Game,
 games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # standard: 1, 'Group', NA, NA, NA, NA, NULL; meanings below in mutate
                  1, 'Group', 'tur', 0, 'ita', 3, c("ita 53 0 own ld", "ita 66 0 reg ex", "ita 79 0 reg ex"),
                  2, 'Group', 'wal', 1, 'sui', 1, c("sui 49 0 reg ld", "wal 74 0 reg os"),
-                 3, 'Group', 'den', 0, 'fin', 1, c("fin 60 0 reg ld"),
+                 3, 'Group', 'den', 0, 'fin', 1, "fin 60 0 reg ld",
                  4, 'Group', 'bel', 3, 'rus', 0, c("bel 10 0 reg ld", "bel 34 0 reg ex", "bel 88 0 reg ex"),
-                 5, 'Group', 'eng', 1, 'cro', 0, c("eng 57 0 reg ld"),
+                 5, 'Group', 'eng', 1, 'cro', 0, "eng 57 0 reg ld",
                  6, 'Group', 'aut', 3, 'mkd', 1, c("aut 18 0 reg ld", "mkd 28 0 reg os", "aut 78 0 reg ld", "aut 89 0 reg ex"),
                  7, 'Group', 'ned', 3, 'ukr', 2, c("ned 52 0 reg ld", "ned 58 0 reg ex", "ukr 75 0 reg cu", "ukr 79 0 reg os", "ned 85 0 reg ld"),
                  8, 'Group', 'sco', 0, 'cze', 2, c("cze 42 0 reg ld", "cze 52 0 reg ex"),
                  9, 'Group', 'pol', 1, 'svk', 2, c("svk 18 0 own ld", "pol 46 0 reg os", "svk 69 0 reg ld"),
                  10, 'Group', 'esp', 0, 'swe', 0, NULL,
                  11, 'Group', 'hun', 0, 'por', 3, c("por 84 0 reg ld", "por 87 0 pen ex", "por 90 2 reg ex"),
-                 12, 'Group', 'fra', 1, 'ger', 0, c("fra 20 0 own ld"),
-                 13, 'Group', 'fin', NA, 'rus', NA, NULL,
+                 12, 'Group', 'fra', 1, 'ger', 0, "fra 20 0 own ld",
+                 13, 'Group', 'fin', 0, 'rus', 1, "rus 45 2 reg ld",
                  14, 'Group', 'tur', NA, 'wal', NA, NULL,
                  15, 'Group', 'ita', NA, 'sui', NA, NULL,
                  16, 'Group', 'ukr', NA, 'mkd', NA, NULL,
@@ -170,7 +170,7 @@ ggplot(goals, mapping = aes(x = Time)) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
-  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_line(linetype = "dashed"),
@@ -199,17 +199,17 @@ windows(16, 9)
 p1 / p2 + p3 +
   plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
   plot_annotation(title = "UEFA Euro 2020 - Goals") -> p 
-  plot(p)
-  P1 <- p
-  rm(p1, p2, p3, p)
-  
+plot(p)
+P1 <- p
+rm(p1, p2, p3, p)
+
 
 ## page 2 ----
 ggplot(goals, mapping = aes(x = 1)) +
   geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
   scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
   scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
-  scale_fill_manual(name = "", values = colors) +
+  scale_fill_manual(name = "", values = colors[1:3]) +
   coord_polar(theta = "y") +
   theme_minimal() +
   theme(panel.grid.major.x = element_blank(),
@@ -222,8 +222,8 @@ ggplot(goals, mapping = aes(x = Time)) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
-  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
-  scale_fill_manual(name = "", values = colors) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors[1:3]) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p2
 
@@ -266,7 +266,8 @@ plot(p)
 P3 <- p     
 rm(p)
 
-pdf("Euro2020.pdf", paper = "a4r", width = 16, height = 9)
+## pdf ----
+pdf("Fussball/Euro2020/Euro2020.pdf", paper = "a4r", width = 16, height = 9)
 plot(P1)
 plot(P2)
 plot(P3)
