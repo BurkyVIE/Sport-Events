@@ -72,7 +72,7 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
                  11, 'Group', 'hun', 0, 'por', 3, c("por 84 0 reg ld", "por 87 0 pen ex", "por 90 2 reg ex"),
                  12, 'Group', 'fra', 1, 'ger', 0, "fra 20 0 own ld",
                  13, 'Group', 'fin', 0, 'rus', 1, "rus 45 2 reg ld",
-                 14, 'Group', 'tur', NA, 'wal', NA, NULL,
+                 14, 'Group', 'tur', 0, 'wal', 1, "wal 42 0 reg ld",
                  15, 'Group', 'ita', NA, 'sui', NA, NULL,
                  16, 'Group', 'ukr', NA, 'mkd', NA, NULL,
                  17, 'Group', 'den', NA, 'bel', NA, NULL,
@@ -165,6 +165,38 @@ goals <- games_played %>%
   mutate(City = factor(City, levels = locations$City))
 # graphics ----
 ## page 1 ----
+ggplot(goals, mapping = aes(x = 1)) +
+  geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
+  scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
+  scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors[1:3]) +
+  coord_polar(theta = "y") +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title = element_blank(),
+        axis.text.y = element_blank()) -> p1
+
+ggplot(goals, mapping = aes(x = Time)) +
+  geom_bar(mapping = aes(fill = Type)) +
+  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
+  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
+  scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors[1:3]) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p2
+
+windows(16, 9)
+p1 + p2 +
+  plot_annotation(title = "UEFA Euro 2020 - Goals") &
+  plot_layout(guides = "collect") &
+  theme(legend.position = "top") -> p
+plot(p)
+P1 <- p
+rm(p1, p2, p)
+
+## page 2 ----
 ggplot(goals, mapping = aes(x = Time)) +
   geom_bar(mapping = aes(fill = Time), show.legend = FALSE) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
@@ -200,41 +232,9 @@ p1 / p2 + p3 +
   plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
   plot_annotation(title = "UEFA Euro 2020 - Goals") -> p 
 plot(p)
-P1 <- p
+P2 <- p
 rm(p1, p2, p3, p)
 
-
-## page 2 ----
-ggplot(goals, mapping = aes(x = 1)) +
-  geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
-  scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
-  scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
-  scale_fill_manual(name = "", values = colors[1:3]) +
-  coord_polar(theta = "y") +
-  theme_minimal() +
-  theme(panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        axis.title = element_blank(),
-        axis.text.y = element_blank()) -> p1
-
-ggplot(goals, mapping = aes(x = Time)) +
-  geom_bar(mapping = aes(fill = Type)) +
-  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
-  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
-  scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
-  scale_fill_manual(name = "", values = colors[1:3]) +
-  theme_minimal() +
-  theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p2
-
-windows(16, 9)
-p1 + p2 +
-  plot_annotation(title = "UEFA Euro 2020 - Goals") &
-  plot_layout(guides = "collect") &
-  theme(legend.position = "top") -> p
-plot(p)
-P2 <- p
-rm(p1, p2, p)
 
 ## page 3 ----
 games_played %>% 
