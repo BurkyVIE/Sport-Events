@@ -206,20 +206,19 @@ p1 / p2 + p3 +
 
 ## page 2 ----
 ggplot(goals, mapping = aes(x = 1)) +
-  geom_bar(mapping = aes(fill = Type)) +
+  geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
   scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
   scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   coord_polar(theta = "y") +
   theme_minimal() +
-  theme(legend.position = "top",
-        panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         axis.title = element_blank(),
         axis.text.y = element_blank()) -> p1
 
 ggplot(goals, mapping = aes(x = Time)) +
-  geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
+  geom_bar(mapping = aes(fill = Type)) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
@@ -230,7 +229,9 @@ ggplot(goals, mapping = aes(x = Time)) +
 
 windows(16, 9)
 p1 + p2 +
-  plot_annotation(title = "UEFA Euro 2020 - Goals") -> p
+  plot_annotation(title = "UEFA Euro 2020 - Goals") &
+  plot_layout(guides = "collect") &
+  theme(legend.position = "top") -> p
 plot(p)
 P2 <- p
 rm(p1, p2, p)
