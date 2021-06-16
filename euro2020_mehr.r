@@ -238,10 +238,10 @@ rm(p1, p2, p3, p)
 
 ## page 3 ----
 games_played %>% 
-  transmute(FIFA = Team_A, For = Goals_A, Against = Goals_B) %>%
+  transmute(Stage, FIFA = Team_A, For = Goals_A, Against = Goals_B) %>%
   bind_rows(games_played %>%
-              transmute(FIFA = Team_B, For = Goals_B, Against = Goals_A)) %>%
-  group_by(FIFA) %>%
+              transmute(Stage, FIFA = Team_B, For = Goals_B, Against = Goals_A)) %>%
+  group_by(FIFA, Stage) %>%
   summarise(For = sum(For), Against = sum(Against), .groups = "drop") %>%
   mutate(Diff = For - Against) %>%
   arrange(-Diff, -For) %>%
