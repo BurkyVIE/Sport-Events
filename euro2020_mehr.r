@@ -2,8 +2,8 @@
 require(tidyverse)
 library(patchwork)
 
-colors <- c("firebrick", "gold", "forestgreen", RColorBrewer::brewer.pal(9, "YlGn")[9:2]) %>%  # penalty + own goal + regular + 8 sequential
-  set_names(c("Penalty", "Own Goal", "Regular", "(105,120]", "(90,105]", "(75,90]", "(60,75]", "(45,60]", "(30,45]", "(15,30]", "(0,15]"))
+colors <- c("firebrick", "gold", "forestgreen", colorRampPalette(c("forestgreen", "#d0f0c0"))(8)) %>%  # penalty + own goal + regular + 8 sequential: RColorBrewer::brewer.pal(9, "YlGn")[9:2])
+  set_names(c("Penalty", "Own Goal", "Regular", "(0,15]", "(15,30]", "(30,45]", "(45,60]", "(60,75]", "(75,90]", "(90,105]", "(105,120]"))
 
 # data ----
 ## participating teams ----
@@ -119,7 +119,7 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
                               Time = cut(Minute, seq(0, 120, by = 15), right = TRUE))
          ))
 
-# calculations ----
+# derivates ----
 ## games played ----
 games_played <- games %>%
   filter(!is.na(Goals_A))
@@ -188,7 +188,7 @@ ggplot(goals, mapping = aes(x = Minute)) +
         axis.text.y = element_blank()) -> p2
 
 ggplot(goals, mapping = aes(x = City)) +
-  geom_bar(mapping = aes(fill = Time), show.legend = FALSE) +
+  geom_bar(mapping = aes(fill = fct_rev(Time)), show.legend = FALSE) +
   scale_x_discrete(expand = c(.01, .01), guide = guide_axis(n.dodge = 2), drop = FALSE) +
   scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
@@ -274,5 +274,5 @@ rm(P1, P2, P3)
 
 # clean up ----
 rm(colors, games_played) # helpers
-rm(table, goals) # derivates
+# rm(table, goals) # derivates
 # rm(groups, locations, teams, games) # basic data
