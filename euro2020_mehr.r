@@ -1,8 +1,9 @@
 # libraries and globals ----
 require(tidyverse)
+library(patchwork)
 
-colors <- c("orangered", "gold", RColorBrewer::brewer.pal(9, "YlGn")[9:2]) %>%  # penalty + own goal + 8 sequential
-  set_names(c("Penalty", "Own Goal", "(105,120]", "(90,105]", "(75,90]", "(60,75]", "(45,60]", "(30,45]", "(15,30]", "(0,15]"))
+colors <- c("orangered", "gold", "forestgreen", RColorBrewer::brewer.pal(9, "YlGn")[9:2]) %>%  # penalty + own goal + regular + 8 sequential
+  set_names(c("Penalty", "Own Goal", "Regular", "(105,120]", "(90,105]", "(75,90]", "(60,75]", "(45,60]", "(30,45]", "(15,30]", "(0,15]"))
 
 # data ----
 ## participating teams ----
@@ -113,10 +114,10 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
          Goals = map(Goals, ~ tibble(data = .) %>%
                        separate(data, into = c("FIFA", "Minute", "OT", "Type", "Course"), sep = " ") %>% 
                        mutate(across(Minute:OT, ~as.integer(.)), # needed for later cut - only works on numbers
-                              Type = factor(Type, levels = c("reg", "own", "pen"), labels = c("Regular", "Own Goal", "Penalty")),
+                              Type = factor(Type, levels = c("pen", "own", "reg"), labels = c("Penalty", "Own Goal", "Regular")),
                               Course = factor(Course, levels = c("ld", "os", "ex", "cu"), labels = c("Lead", "Offset", "Extend", "Catch-up")),
                               Time = cut(Minute, seq(0, 120, by = 15), right = TRUE))
-                     ))
+         ))
 
 # calculations ----
 ## games played ----
@@ -133,13 +134,13 @@ table <- games_played %>%
             Diff = Goals_A - Goals_B,
             Scored = Goals_A) %>%
   bind_rows(games_played %>%
-      filter(Stage == "Group") %>%
-      transmute(FIFA = Team_B,
-                Points = case_when(Goals_B > Goals_A ~ 3L,
-                                   Goals_B == Goals_A ~1L,
-                                   TRUE ~ 0L),
-                Diff = Goals_B - Goals_A,
-                Scored = Goals_B)) %>%
+              filter(Stage == "Group") %>%
+              transmute(FIFA = Team_B,
+                        Points = case_when(Goals_B > Goals_A ~ 3L,
+                                           Goals_B == Goals_A ~1L,
+                                           TRUE ~ 0L),
+                        Diff = Goals_B - Goals_A,
+                        Scored = Goals_B)) %>%
   left_join(groups %>% unnest(cols = FIFA), by = "FIFA") %>%
   group_by(Group, FIFA) %>%
   summarise(Games = n(),
@@ -150,39 +151,103 @@ table <- games_played %>%
   arrange(Group, -Points, -Diff, -Scored) %>%
   left_join(teams, by = "FIFA") 
 
-  group_split(table, Group)
+group_split(table, Group)
 
-## stats ----
-stats <- games_played %>% 
-    transmute(FIFA = Team_A, For = Goals_A, Against = Goals_B) %>%
-    bind_rows(games_played %>%
-                transmute(FIFA = Team_B, For = Goals_B, Against = Goals_A)) %>%
-    group_by(FIFA) %>%
-    summarise(For = sum(For), Against = sum(Against), .groups = "drop") %>%
-    mutate(Diff = For - Against) %>%
-    arrange(-Diff, -For) %>%
-    rowid_to_column(var = "Rank")
-  
 ## goals ----
 goals <- games_played %>%
-    select(Game, Stage, Goals) %>%
-    unnest(cols = Goals) %>% 
-    left_join(teams, by = "FIFA") %>%
-    relocate(Team, .after = FIFA) %>% 
-    left_join(groups %>% unnest(cols = FIFA), by = "FIFA") %>% 
-    relocate(Group, .after = Stage) %>% 
-    left_join(locations %>% select(City, Game) %>% unnest(cols = Game), by = "Game") %>% 
-    mutate(City = factor(City, levels = locations$City),
-           Legend = case_when(Type == "Penalty" ~ "Penalty",
-                              Type == "Own Goal" ~ "Own Goal",
-                              TRUE ~ as.character(Time)) %>% 
-             factor(levels = names(colors)))
-
+  select(Game, Stage, Goals) %>%
+  unnest(cols = Goals) %>% 
+  left_join(teams, by = "FIFA") %>%
+  relocate(Team, .after = FIFA) %>% 
+  left_join(groups %>% unnest(cols = FIFA), by = "FIFA") %>% 
+  relocate(Group, .after = Stage) %>% 
+  left_join(locations %>% select(City, Game) %>% unnest(cols = Game), by = "Game") %>% 
+  mutate(City = factor(City, levels = locations$City))
 # graphics ----
-## goals per team ----
-p <- ggplot(data = stats, mapping = aes(x = reorder(FIFA, Rank, sum))) +
+## page 1 ----
+ggplot(goals, mapping = aes(x = Time)) +
+  geom_bar(mapping = aes(fill = Time), show.legend = FALSE) +
+  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
+  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
+  scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
+  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_line(linetype = "dashed"),
+        axis.title.x = element_blank()) -> p1
+
+ggplot(goals, mapping = aes(x = Minute)) +
+  geom_boxplot(size = 1.5, color = colors["Regular"]) +
+  scale_x_continuous(limits = c(0, 120), breaks = seq(0, 120, by = 15), minor_breaks = seq(0, 120, by = 5), expand = c(.01, .01)) +
+  scale_y_continuous(expand = c(.1, .1)) +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_line(linetype = "dashed"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank()) -> p2
+
+ggplot(goals, mapping = aes(x = City)) +
+  geom_bar(mapping = aes(fill = Time), show.legend = FALSE) +
+  scale_x_discrete(expand = c(.01, .01), guide = guide_axis(n.dodge = 2), drop = FALSE) +
+  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p3
+
+windows(16, 9)
+p1 / p2 + p3 +
+  plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
+  plot_annotation(title = "UEFA Euro 2020 - Goals") -> p 
+  plot(p)
+  P1 <- p
+  rm(p1, p2, p3, p)
+  
+
+## page 2 ----
+ggplot(goals, mapping = aes(x = 1)) +
+  geom_bar(mapping = aes(fill = Type)) +
+  scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
+  scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  coord_polar(theta = "y") +
+  theme_minimal() +
+  theme(legend.position = "left",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title = element_blank(),
+        axis.text.y = element_blank()) -> p1
+
+ggplot(goals, mapping = aes(x = Time)) +
+  geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
+  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
+  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
+  scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
+  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p2
+
+windows(16, 9)
+p1 + p2 +
+  plot_annotation(title = "UEFA Euro 2020 - Goals") -> p
+plot(p)
+P2 <- p
+rm(p1, p2, p)
+
+## page 3 ----
+games_played %>% 
+  transmute(FIFA = Team_A, For = Goals_A, Against = Goals_B) %>%
+  bind_rows(games_played %>%
+              transmute(FIFA = Team_B, For = Goals_B, Against = Goals_A)) %>%
+  group_by(FIFA) %>%
+  summarise(For = sum(For), Against = sum(Against), .groups = "drop") %>%
+  mutate(Diff = For - Against) %>%
+  arrange(-Diff, -For) %>%
+  rowid_to_column(var = "Rank") %>% 
+  ggplot(mapping = aes(x = reorder(FIFA, Rank, sum))) +
   geom_bar(mapping = aes(y = For), stat = "identity", fill = "forestgreen") +
-  geom_bar(mapping = aes(y = -Against), stat = "identity", fill = "firebrick") +
+  geom_bar(mapping = aes(y = -Against), stat = "identity", fill = "orangered") +
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
   geom_point(mapping = aes(x = Rank, y = Diff), stroke = 2, shape = 4, color = "gold") +
   geom_text(mapping = aes(x = Rank, label = reorder(FIFA, Rank, sum)), y = 0, size = 3.5) +
@@ -194,40 +259,20 @@ p <- ggplot(data = stats, mapping = aes(x = reorder(FIFA, Rank, sum))) +
         panel.border = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
-        axis.line.y = element_line(color = "black"))
+        axis.line.y = element_line(color = "black")) -> p
+windows(16, 9)
 plot(p)
+P3 <- p     
+rm(p)
 
-## goals per type ----
-p <- ggplot(goals, mapping = aes(x = 1)) +
-  geom_bar(mapping = aes(fill = Legend)) +
-  scale_fill_manual(name = "", values = colors, drop = FALSE) +
-  labs(title = "UEFA Euro 2020", subtitle = "Goals by Type") +
-  coord_polar(theta = "y") +
-  theme_minimal() +
-  theme(panel.grid.minor = element_blank(),
-        axis.title.y = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks = element_blank())
-plot(p)
-
-## goals per time ----
-p <- ggplot(goals, mapping = aes(x = Time)) +
-  geom_bar(mapping = aes(fill = Legend), ) +
-  scale_fill_manual(name = "", values = colors, drop = FALSE) +
-  scale_x_discrete(drop = FALSE) +
-  labs(title = "UEFA Euro 2020", subtitle = "Goals by Time") +
-  theme_minimal()
-plot(p)
-
-## goals per city ----
-p <- ggplot(goals, mapping = aes(x = City)) +
-  geom_bar(mapping = aes(fill = Legend)) +
-  scale_fill_manual(name = "", values = colors, drop = F) +
-  scale_x_discrete(drop = FALSE, guide = guide_axis(n.dodge = 2)) +
-  labs(title = "UEFA Euro 2020", subtitle = "Goals by City") +
-  theme_minimal()
-plot(p)
+pdf("Euro2020.pdf", paper = "a4r", width = 16, height = 9)
+plot(P1)
+plot(P2)
+plot(P3)
+dev.off()
+rm(P1, P2, P3)
 
 # clean up ----
-rm(games_played, colors, p)
-#rm(groups, locations, teams, games, table)
+rm(colors, games_played) # helpers
+rm(table, goals) # derivates
+# rm(groups, locations, teams, games) # basic data
