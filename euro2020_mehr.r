@@ -59,23 +59,23 @@ locations <- tribble(~City, ~Stadium, ~Game,
 
 ## games ----
 games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # standard: 1, 'Group', NA, NA, NA, NA, NULL; meanings below in mutate
-                 1, 'Group', 'tur', 0, 'ita', 3, c("ita 53 0 own ld", "ita 66 0 reg ex", "ita 79 0 reg ex"),
-                 2, 'Group', 'wal', 1, 'sui', 1, c("sui 49 0 reg ld", "wal 74 0 reg os"),
-                 3, 'Group', 'den', 0, 'fin', 1, "fin 60 0 reg ld",
-                 4, 'Group', 'bel', 3, 'rus', 0, c("bel 10 0 reg ld", "bel 34 0 reg ex", "bel 88 0 reg ex"),
-                 5, 'Group', 'eng', 1, 'cro', 0, "eng 57 0 reg ld",
-                 6, 'Group', 'aut', 3, 'mkd', 1, c("aut 18 0 reg ld", "mkd 28 0 reg os", "aut 78 0 reg ld", "aut 89 0 reg ex"),
-                 7, 'Group', 'ned', 3, 'ukr', 2, c("ned 52 0 reg ld", "ned 58 0 reg ex", "ukr 75 0 reg cu", "ukr 79 0 reg os", "ned 85 0 reg ld"),
-                 8, 'Group', 'sco', 0, 'cze', 2, c("cze 42 0 reg ld", "cze 52 0 reg ex"),
-                 9, 'Group', 'pol', 1, 'svk', 2, c("svk 18 0 own ld", "pol 46 0 reg os", "svk 69 0 reg ld"),
+                 1, 'Group', 'tur', 0, 'ita', 3, c("ita 53 own ld", "ita 66 reg ex", "ita 79 reg ex"),
+                 2, 'Group', 'wal', 1, 'sui', 1, c("sui 49 reg ld", "wal 74 reg os"),
+                 3, 'Group', 'den', 0, 'fin', 1, "fin 60 reg ld",
+                 4, 'Group', 'bel', 3, 'rus', 0, c("bel 10 reg ld", "bel 34 reg ex", "bel 88 reg ex"),
+                 5, 'Group', 'eng', 1, 'cro', 0, "eng 57 reg ld",
+                 6, 'Group', 'aut', 3, 'mkd', 1, c("aut 18 reg ld", "mkd 28 reg os", "aut 78 reg ld", "aut 89 reg ex"),
+                 7, 'Group', 'ned', 3, 'ukr', 2, c("ned 52 reg ld", "ned 58 reg ex", "ukr 75 reg cu", "ukr 79 reg os", "ned 85 reg ld"),
+                 8, 'Group', 'sco', 0, 'cze', 2, c("cze 42 reg ld", "cze 52 reg ex"),
+                 9, 'Group', 'pol', 1, 'svk', 2, c("svk 18 own ld", "pol 46 reg os", "svk 69 reg ld"),
                  10, 'Group', 'esp', 0, 'swe', 0, NULL,
-                 11, 'Group', 'hun', 0, 'por', 3, c("por 84 0 reg ld", "por 87 0 pen ex", "por 90 2 reg ex"),
-                 12, 'Group', 'fra', 1, 'ger', 0, "fra 20 0 own ld",
-                 13, 'Group', 'fin', 0, 'rus', 1, "rus 45 2 reg ld",
-                 14, 'Group', 'tur', 0, 'wal', 1, "wal 42 0 reg ld",
-                 15, 'Group', 'ita', NA, 'sui', NA, NULL,
-                 16, 'Group', 'ukr', NA, 'mkd', NA, NULL,
-                 17, 'Group', 'den', NA, 'bel', NA, NULL,
+                 11, 'Group', 'hun', 0, 'por', 3, c("por 84 reg ld", "por 87 pen ex", "por 90+2 reg ex"),
+                 12, 'Group', 'fra', 1, 'ger', 0, "fra 20 own ld",
+                 13, 'Group', 'fin', 0, 'rus', 1, "rus 45+2 reg ld",
+                 14, 'Group', 'tur', 0, 'wal', 1, "wal 42 reg ld",
+                 15, 'Group', 'ita', 3, 'sui', 0, c("ita 26 reg ld", "ita 56 reg ex", "ita 89 reg ex"),
+                 16, 'Group', 'ukr', 2, 'mkd', 1, c("ukr 29 reg ld", "ukr 34 reg ex", "mkd 57 reg cu"),
+                 17, 'Group', 'den', 1, 'bel', 1, c("den 2 reg ld", "bel 54 reg os"),
                  18, 'Group', 'ned', NA, 'aut', NA, NULL,
                  19, 'Group', 'swe', NA, 'svk', NA, NULL,
                  20, 'Group', 'cro', NA, 'cze', NA, NULL,
@@ -112,8 +112,8 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
                  51, 'Final', NA, NA, NA, NA, NULL) %>%
   mutate(across(c(Goals_A, Goals_B), ~as.integer(.)),
          Goals = map(Goals, ~ tibble(data = .) %>%
-                       separate(data, into = c("FIFA", "Minute_raw", "OT", "Type", "Course"), sep = " ") %>% 
-                       separate(Minute_raw, into = c("Minute", "OT"), fill = "right") %>%
+                       separate(data, into = c("FIFA", "Minute_raw", "Type", "Course"), sep = " ") %>% 
+                       separate(Minute_raw, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
                        mutate(across(Minute:OT, ~as.integer(.)), # needed for later cut - only works on numbers
                               Type = factor(Type, levels = c("pen", "own", "reg"), labels = c("Penalty", "Own Goal", "Regular")),
                               Course = factor(Course, levels = c("ld", "os", "ex", "cu"), labels = c("Lead", "Offset", "Extend", "Catch-up")),
@@ -235,7 +235,6 @@ p1 / p2 + p3 +
 plot(p)
 P2 <- p
 rm(p1, p2, p3, p)
-
 
 ## page 3 ----
 games_played %>% 
