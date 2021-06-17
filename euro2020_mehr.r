@@ -112,7 +112,8 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
                  51, 'Final', NA, NA, NA, NA, NULL) %>%
   mutate(across(c(Goals_A, Goals_B), ~as.integer(.)),
          Goals = map(Goals, ~ tibble(data = .) %>%
-                       separate(data, into = c("FIFA", "Minute", "OT", "Type", "Course"), sep = " ") %>% 
+                       separate(data, into = c("FIFA", "Minute_raw", "OT", "Type", "Course"), sep = " ") %>% 
+                       separate(Minute_raw, into = c("Minute", "OT"), fill = "right") %>%
                        mutate(across(Minute:OT, ~as.integer(.)), # needed for later cut - only works on numbers
                               Type = factor(Type, levels = c("pen", "own", "reg"), labels = c("Penalty", "Own Goal", "Regular")),
                               Course = factor(Course, levels = c("ld", "os", "ex", "cu"), labels = c("Lead", "Offset", "Extend", "Catch-up")),
