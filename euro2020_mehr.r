@@ -75,7 +75,7 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
                  14, 'Group', 'tur', 0, 'wal', 1, "wal 42 reg ld",
                  15, 'Group', 'ita', 3, 'sui', 0, c("ita 26 reg ld", "ita 56 reg ex", "ita 89 reg ex"),
                  16, 'Group', 'ukr', 2, 'mkd', 1, c("ukr 29 reg ld", "ukr 34 reg ex", "mkd 57 reg cu"),
-                 17, 'Group', 'den', 1, 'bel', 1, c("den 2 reg ld", "bel 54 reg os"),
+                 17, 'Group', 'den', 1, 'bel', 2, c("den 2 reg ld", "bel 54 reg os", "bel 70 reg ex"),
                  18, 'Group', 'ned', NA, 'aut', NA, NULL,
                  19, 'Group', 'swe', NA, 'svk', NA, NULL,
                  20, 'Group', 'cro', NA, 'cze', NA, NULL,
@@ -114,7 +114,7 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
          Goals = map(Goals, ~ tibble(data = .) %>%
                        separate(data, into = c("FIFA", "Minute_raw", "Type", "Course"), sep = " ") %>% 
                        separate(Minute_raw, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
-                       mutate(across(Minute:OT, ~as.integer(.)), # needed for later cut - only works on numbers
+                       mutate(across(Minute:OT, ~parse_integer(.)), # needed for later cut - only works on numbers
                               Type = factor(Type, levels = c("pen", "own", "reg"), labels = c("Penalty", "Own Goal", "Regular")),
                               Course = factor(Course, levels = c("ld", "os", "ex", "cu"), labels = c("Lead", "Offset", "Extend", "Catch-up")),
                               Time = cut(Minute, seq(0, 120, by = 15), right = TRUE))
