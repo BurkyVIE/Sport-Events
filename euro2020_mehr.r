@@ -2,8 +2,8 @@
 require(tidyverse)
 library(patchwork)
 
-colors <- c("firebrick", "gold", "forestgreen", colorRampPalette(c("forestgreen", "#d0f0c0"))(8)) %>%  # penalty + own goal + regular + 8 sequential: RColorBrewer::brewer.pal(9, "YlGn")[9:2])
-  set_names(c("Penalty", "Own Goal", "Regular", "(0,15]", "(15,30]", "(30,45]", "(45,60]", "(60,75]", "(75,90]", "(90,105]", "(105,120]"))
+colors <- c("forestgreen", "gold", "orangered", colorRampPalette(c("forestgreen", "#d0f0c0"))(8)) %>%  # penalty + own goal + regular + 8 sequential: RColorBrewer::brewer.pal(9, "YlGn")[9:2])
+  set_names(c("aus dem Spiel", "Eigentor", "Elfmeter", "(0,15]", "(15,30]", "(30,45]", "(45,60]", "(60,75]", "(75,90]", "(90,105]", "(105,120]"))
 
 # data ----
 ## Teilnehmer ----
@@ -58,7 +58,7 @@ locations <- tribble(~Stadt, ~Stadion, ~Spiel,
 
 
 ## Spiele ----
-games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard: 1, "Group", NA, NA, NA, NA, NULL; meanings below in mutate
+games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard: No, "Runde Phase", "Heim Gast", NA, NA, NULL; Abkürzungen in den 'mutate'-Statements
                  01, "Gr T1", "tur ita", 0, 3, c("ita 53 own ld", "ita 66 reg ex", "ita 79 reg ex"),
                  02, "Gr T1", "wal sui", 1, 1, c("sui 49 reg ld", "wal 74 reg os"),
                  03, "Gr T1", "den fin", 0, 1, "fin 60 reg ld",
@@ -75,7 +75,7 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                  14, "Gr T2", "tur wal", 0, 2, c("wal 42 reg ld", "wal 90+5 reg ex"),
                  15, "Gr T2", "ita sui", 3, 0, c("ita 26 reg ld", "ita 56 reg ex", "ita 89 reg ex"),
                  16, "Gr T2", "ukr mkd", 2, 1, c("ukr 29 reg ld", "ukr 34 reg ex", "mkd 57 reg cu"),
-                 17, "Gr T2", "den bel", 1, 2, c("den 2 reg ld", "bel 54 reg os", "bel 70 reg ex"),
+                 17, "Gr T2", "den bel", 1, 2, c("den 2 reg ld", "bel 54 reg os", "bel 70 reg ld"),
                  18, "Gr T2", "ned aut", 2, 0, c("ned 11 pen ld", "ned 67 reg ex"),
                  19, "Gr T2", "swe svk", NA, NA, NULL,
                  20, "Gr T2", "cro cze", NA, NA, NULL,
@@ -117,13 +117,25 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                         labels = c("Spieltag 1", "Spieltag 2", "Spieltag 3", "Achtelfinale", "Viertelfinale", "Halbfinale", "Finale")),
          across(c(Tore_H, Tore_G), ~as.integer(.)),
          Tore = map(Tore, ~ tibble(data = .) %>%
-                       separate(data, into = c("FIFA", "Minute_raw", "Type", "Course"), sep = " ") %>% 
-                       separate(Minute_raw, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
+                       separate(data, into = c("FIFA", "Minute_roh", "Typ", "Verlauf"), sep = " ") %>% 
+                       separate(Minute_roh, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
                        mutate(across(Minute:OT, ~parse_integer(.)), # needed for later cut - only works on numbers
-                              Type = factor(Type, levels = c("pen", "own", "reg"), labels = c("Penalty", "Own Goal", "Regular")),
-                              Course = factor(Course, levels = c("ld", "os", "ex", "cu"), labels = c("Lead", "Offset", "Extend", "Catch-up")),
-                              Time = cut(Minute, seq(0, 120, by = 15), right = TRUE))
-         ))
+                              Typ = factor(Typ, levels = c("reg", "own", "pen"), labels = c("aus dem Spiel", "Eigentor", "Elfmeter")),
+                              Verlauf = factor(Verlauf, levels = c("ld", "ex", "cu", "os"), labels = c("Führung", "Ausbau", "Anschluss", "Ausgleich")),
+                              Time = cut(Minute, seq(0, 120, by = 15), right = TRUE))))
+  
+# Bestimme Gewinner; berücksichtigt Elferschießen
+games <- games %>% 
+  unnest(cols = Tore) %>%
+  filter(Verlauf %in% c("Führung", "Ausgleich")) %>%
+  group_by(Spiel) %>%
+  summarise(Sieger = last(FIFA), he = last(Verlauf)) %>%
+  mutate(Sieger = case_when(he ==  "Ausgleich" ~ NA_character_,
+                            TRUE ~ Sieger)) %>%
+  select(-he) %>%
+  right_join(games, by = "Spiel") %>% 
+  relocate(Sieger, .after = Tore) %>% 
+  rowwise() %>% mutate(Ergebnis = paste(sort(c(Tore_H, Tore_G), decreasing = TRUE), collapse = ":"))
 
 # derivates ----
 ## games played ----
@@ -172,7 +184,7 @@ goals <- games_played %>%
 # graphics ----
 ## page 1 ----
 ggplot(goals, mapping = aes(x = 1)) +
-  geom_bar(mapping = aes(fill = Type), show.legend = FALSE) +
+  geom_bar(mapping = aes(fill = fct_rev(Typ)), show.legend = FALSE) +
   scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
   scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors[1:3]) +
@@ -184,9 +196,9 @@ ggplot(goals, mapping = aes(x = 1)) +
         axis.text.y = element_blank()) -> p1
 
 ggplot(goals, mapping = aes(x = Time)) +
-  geom_bar(mapping = aes(fill = Type)) +
-  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
-  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
+  geom_bar(mapping = aes(fill = fct_rev(Typ))) +
+  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # Sicherstellen das erster und
+  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # letzter 'Bar' dargestellt werden
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
   scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors[1:3]) +
@@ -215,7 +227,7 @@ ggplot(goals, mapping = aes(x = Time)) +
         axis.title.x = element_blank()) -> p1
 
 ggplot(goals, mapping = aes(x = Minute)) +
-  geom_boxplot(size = 1.5, color = colors["Regular"]) +
+  geom_boxplot(size = 1.5, color = colors["aus dem Spiel"]) +
   scale_x_continuous(limits = c(0, 120), breaks = seq(0, 120, by = 15), minor_breaks = seq(0, 120, by = 5), expand = c(.01, .01)) +
   scale_y_continuous(expand = c(.1, .1)) +
   theme_minimal() +
