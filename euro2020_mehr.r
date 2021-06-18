@@ -114,7 +114,7 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
   separate(Begegnung, into = c("Heim", "Gast")) %>% 
   mutate(Runde = factor(Runde, levels = c("Gr", "Fi"), labels = c("Vorrunde", "Finale")),
          Phase = factor(Phase, levels = c("T1", "T2", "T3", "F8", "F4", "F2", "Fi"),
-                        labels = c("Spieltag 1", "Spieltag 2", "Spieltag 3", "Achtelfinale", "Viertelfinale", "Halbfinale", "Finale")),
+                        labels = c("1. Spieltag", "2. Spieltag", "3. Spieltag", "Achtelfinale", "Viertelfinale", "Halbfinale", "Finale")),
          across(c(Tore_H, Tore_G), ~as.integer(.)),
          Tore = map(Tore, ~ tibble(data = .) %>%
                        separate(data, into = c("FIFA", "Minute_roh", "Typ", "Verlauf"), sep = " ") %>% 
