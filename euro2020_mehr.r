@@ -72,7 +72,7 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
                  11, 'Group', 'hun', 0, 'por', 3, c("por 84 reg ld", "por 87 pen ex", "por 90+2 reg ex"),
                  12, 'Group', 'fra', 1, 'ger', 0, "fra 20 own ld",
                  13, 'Group', 'fin', 0, 'rus', 1, "rus 45+2 reg ld",
-                 14, 'Group', 'tur', 0, 'wal', 1, "wal 42 reg ld",
+                 14, 'Group', 'tur', 0, 'wal', 2, c("wal 42 reg ld", "wal 90+5 reg ex"),
                  15, 'Group', 'ita', 3, 'sui', 0, c("ita 26 reg ld", "ita 56 reg ex", "ita 89 reg ex"),
                  16, 'Group', 'ukr', 2, 'mkd', 1, c("ukr 29 reg ld", "ukr 34 reg ex", "mkd 57 reg cu"),
                  17, 'Group', 'den', 1, 'bel', 2, c("den 2 reg ld", "bel 54 reg os", "bel 70 reg ex"),
