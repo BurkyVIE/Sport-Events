@@ -6,112 +6,115 @@ colors <- c("firebrick", "gold", "forestgreen", colorRampPalette(c("forestgreen"
   set_names(c("Penalty", "Own Goal", "Regular", "(0,15]", "(15,30]", "(30,45]", "(45,60]", "(60,75]", "(75,90]", "(90,105]", "(105,120]"))
 
 # data ----
-## participating teams ----
-teams <- tribble(~FIFA, ~Team,
-                 'bel', 'Belgien',
-                 'ita', 'Italien',
-                 'pol', 'Polen',
-                 'rus', 'Russland',
-                 'ukr', 'Ukraine',
-                 'esp', 'Spanien',
-                 'eng', 'England',
-                 'fra', 'Frankreich',
-                 'cze', 'Tschechien',
-                 'tur', 'Türkei',
-                 'fin', 'Finnland',
-                 'swe', 'Schweden',
-                 'ger', 'Deutschland',
-                 'cro', 'Kroatien',
-                 'ned', 'Niederlande',
-                 'aut', 'Österreich',
-                 'por', 'Portugal',
-                 'den', 'Dänemark',
-                 'sui', 'Schweiz',
-                 'wal', 'Wales',
-                 'mkd', 'Nordmazedonien',
-                 'hun', 'Ungarn',
-                 'svk', 'Slowakei',
-                 'sco', 'Schottland')
+## Teilnehmer ----
+teams <- tribble(~FIFA, ~Land,
+                 "bel", "Belgien",
+                 "ita", "Italien",
+                 "pol", "Polen",
+                 "rus", "Russland",
+                 "ukr", "Ukraine",
+                 "esp", "Spanien",
+                 "eng", "England",
+                 "fra", "Frankreich",
+                 "cze", "Tschechien",
+                 "tur", "Türkei",
+                 "fin", "Finnland",
+                 "swe", "Schweden",
+                 "ger", "Deutschland",
+                 "cro", "Kroatien",
+                 "ned", "Niederlande",
+                 "aut", "Österreich",
+                 "por", "Portugal",
+                 "den", "Dänemark",
+                 "sui", "Schweiz",
+                 "wal", "Wales",
+                 "mkd", "Nordmazedonien",
+                 "hun", "Ungarn",
+                 "svk", "Slowakei",
+                 "sco", "Schottland")
 
-## groups ----
-groups <- tribble(~Group, ~FIFA,
-                  'A', c('tur', 'ita', 'wal', 'sui'),
-                  'B', c('den', 'fin', 'bel', 'rus'),
-                  'C', c('ned', 'ukr', 'aut', 'mkd'),
-                  'D', c('eng', 'cro', 'sco', 'cze'),
-                  'E', c('esp', 'swe', 'pol', 'svk'),
-                  'F', c('hun', 'por', 'fra', 'ger'))
+## Gruppen ----
+groups <- tribble(~Gruppe, ~FIFA,
+                  "A", c("tur", "ita", "wal", "sui"),
+                  "B", c("den", "fin", "bel", "rus"),
+                  "C", c("ned", "ukr", "aut", "mkd"),
+                  "D", c("eng", "cro", "sco", "cze"),
+                  "E", c("esp", "swe", "pol", "svk"),
+                  "F", c("hun", "por", "fra", "ger"))
 
-## locations ----
-locations <- tribble(~City, ~Stadium, ~Game,
-                     'Amsterdam', 'Johan Cruijff ArenA', c(7, 18, 27, 37),
-                     'Baku', 'Bakı Milli Stadionu', c(2, 14, 25, 47),
-                     'Budapest', 'Puskas Arena', c(11, 22, 35, 39),
-                     'Bukarest', 'Arena Nationala', c(6, 16, 28, 42),
-                     'Glasgow', 'Hampden Park', c(8, 20, 31, 44),
-                     'Kopenhagen', 'Parken', c(3, 17, 29, 41),
-                     'London', 'Wembley Stadium', c(5, 21, 32, 38, 43, 49, 50, 51),
-                     'München', 'Allianz Arena', c(12, 23, 36, 46),
-                     'Rom', 'Stadio Olimpico', c(1, 15, 26, 48),
-                     'Sankt Petersburg', 'Krestowski-Stadion', c(4, 9, 13, 19, 30, 34, 45),
-                     'Sevilla', 'Estadio Olimpico', c(10, 24, 33, 40))
+## Spielorte ----
+locations <- tribble(~Stadt, ~Stadion, ~Spiel,
+                     "Amsterdam", "Johan Cruijff ArenA", c(7, 18, 27, 37),
+                     "Baku", "Bakı Milli Stadionu", c(2, 14, 25, 47),
+                     "Budapest", "Puskas Arena", c(11, 22, 35, 39),
+                     "Bukarest", "Arena Nationala", c(6, 16, 28, 42),
+                     "Glasgow", "Hampden Park", c(8, 20, 31, 44),
+                     "Kopenhagen", "Parken", c(3, 17, 29, 41),
+                     "London", "Wembley Stadium", c(5, 21, 32, 38, 43, 49, 50, 51),
+                     "München", "Allianz Arena", c(12, 23, 36, 46),
+                     "Rom", "Stadio Olimpico", c(1, 15, 26, 48),
+                     "Sankt Petersburg", "Krestowski-Stadion", c(4, 9, 13, 19, 30, 34, 45),
+                     "Sevilla", "Estadio Olimpico", c(10, 24, 33, 40))
 
 
-## games ----
-games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # standard: 1, 'Group', NA, NA, NA, NA, NULL; meanings below in mutate
-                 1, 'Group', 'tur', 0, 'ita', 3, c("ita 53 own ld", "ita 66 reg ex", "ita 79 reg ex"),
-                 2, 'Group', 'wal', 1, 'sui', 1, c("sui 49 reg ld", "wal 74 reg os"),
-                 3, 'Group', 'den', 0, 'fin', 1, "fin 60 reg ld",
-                 4, 'Group', 'bel', 3, 'rus', 0, c("bel 10 reg ld", "bel 34 reg ex", "bel 88 reg ex"),
-                 5, 'Group', 'eng', 1, 'cro', 0, "eng 57 reg ld",
-                 6, 'Group', 'aut', 3, 'mkd', 1, c("aut 18 reg ld", "mkd 28 reg os", "aut 78 reg ld", "aut 89 reg ex"),
-                 7, 'Group', 'ned', 3, 'ukr', 2, c("ned 52 reg ld", "ned 58 reg ex", "ukr 75 reg cu", "ukr 79 reg os", "ned 85 reg ld"),
-                 8, 'Group', 'sco', 0, 'cze', 2, c("cze 42 reg ld", "cze 52 reg ex"),
-                 9, 'Group', 'pol', 1, 'svk', 2, c("svk 18 own ld", "pol 46 reg os", "svk 69 reg ld"),
-                 10, 'Group', 'esp', 0, 'swe', 0, NULL,
-                 11, 'Group', 'hun', 0, 'por', 3, c("por 84 reg ld", "por 87 pen ex", "por 90+2 reg ex"),
-                 12, 'Group', 'fra', 1, 'ger', 0, "fra 20 own ld",
-                 13, 'Group', 'fin', 0, 'rus', 1, "rus 45+2 reg ld",
-                 14, 'Group', 'tur', 0, 'wal', 2, c("wal 42 reg ld", "wal 90+5 reg ex"),
-                 15, 'Group', 'ita', 3, 'sui', 0, c("ita 26 reg ld", "ita 56 reg ex", "ita 89 reg ex"),
-                 16, 'Group', 'ukr', 2, 'mkd', 1, c("ukr 29 reg ld", "ukr 34 reg ex", "mkd 57 reg cu"),
-                 17, 'Group', 'den', 1, 'bel', 2, c("den 2 reg ld", "bel 54 reg os", "bel 70 reg ex"),
-                 18, 'Group', 'ned', NA, 'aut', NA, NULL,
-                 19, 'Group', 'swe', NA, 'svk', NA, NULL,
-                 20, 'Group', 'cro', NA, 'cze', NA, NULL,
-                 21, 'Group', 'eng', NA, 'sco', NA, NULL,
-                 22, 'Group', 'hun', NA, 'fra', NA, NULL,
-                 23, 'Group', 'por', NA, 'ger', NA, NULL,
-                 24, 'Group', 'esp', NA, 'pol', NA, NULL,
-                 25, 'Group', 'sui', NA, 'tur', NA, NULL,
-                 26, 'Group', 'ita', NA, 'wal', NA, NULL,
-                 27, 'Group', 'mkd', NA, 'ned', NA, NULL,
-                 28, 'Group', 'ukr', NA, 'aut', NA, NULL,
-                 29, 'Group', 'rus', NA, 'den', NA, NULL,
-                 30, 'Group', 'fin', NA, 'bel', NA, NULL,
-                 31, 'Group', 'cro', NA, 'sco', NA, NULL,
-                 32, 'Group', 'cze', NA, 'eng', NA, NULL,
-                 33, 'Group', 'svk', NA, 'esp', NA, NULL,
-                 34, 'Group', 'swe', NA, 'pol', NA, NULL,
-                 35, 'Group', 'por', NA, 'fra', NA, NULL,
-                 36, 'Group', 'ger', NA, 'hun', NA, NULL,
-                 37, 'Final', NA, NA, NA, NA, NULL,
-                 38, 'Final', NA, NA, NA, NA, NULL,
-                 39, 'Final', NA, NA, NA, NA, NULL,
-                 40, 'Final', NA, NA, NA, NA, NULL,
-                 41, 'Final', NA, NA, NA, NA, NULL,
-                 42, 'Final', NA, NA, NA, NA, NULL,
-                 43, 'Final', NA, NA, NA, NA, NULL,
-                 44, 'Final', NA, NA, NA, NA, NULL,
-                 45, 'Final', NA, NA, NA, NA, NULL,
-                 46, 'Final', NA, NA, NA, NA, NULL,
-                 47, 'Final', NA, NA, NA, NA, NULL,
-                 48, 'Final', NA, NA, NA, NA, NULL,
-                 49, 'Final', NA, NA, NA, NA, NULL,
-                 50, 'Final', NA, NA, NA, NA, NULL,
-                 51, 'Final', NA, NA, NA, NA, NULL) %>%
-  mutate(across(c(Goals_A, Goals_B), ~as.integer(.)),
-         Goals = map(Goals, ~ tibble(data = .) %>%
+## Spiele ----
+games <- tribble(~Spiel, ~Runde, ~Phase, ~Heim, ~Gast, ~Tore_H, ~Tore_G, ~Tore, # standard: 1, "Group", NA, NA, NA, NA, NULL; meanings below in mutate
+                 1, "Gr", "T1", "tur", "ita", 0, 3, c("ita 53 own ld", "ita 66 reg ex", "ita 79 reg ex"),
+                 2, "Gr", "T1", "wal", "sui", 1, 1, c("sui 49 reg ld", "wal 74 reg os"),
+                 3, "Gr", "T1", "den", "fin", 0, 1, "fin 60 reg ld",
+                 4, "Gr", "T1", "bel", "rus", 3, 0, c("bel 10 reg ld", "bel 34 reg ex", "bel 88 reg ex"),
+                 5, "Gr", "T1", "eng", "cro", 1, 0, "eng 57 reg ld",
+                 6, "Gr", "T1", "aut", "mkd", 3, 1, c("aut 18 reg ld", "mkd 28 reg os", "aut 78 reg ld", "aut 89 reg ex"),
+                 7, "Gr", "T1", "ned", "ukr", 3, 2, c("ned 52 reg ld", "ned 58 reg ex", "ukr 75 reg cu", "ukr 79 reg os", "ned 85 reg ld"),
+                 8, "Gr", "T1", "sco", "cze", 0, 2, c("cze 42 reg ld", "cze 52 reg ex"),
+                 9, "Gr", "T1", "pol", "svk", 1, 2, c("svk 18 own ld", "pol 46 reg os", "svk 69 reg ld"),
+                 10, "Gr", "T1", "esp", "swe", 0, 0, NULL,
+                 11, "Gr", "T1", "hun", "por", 0, 3, c("por 84 reg ld", "por 87 pen ex", "por 90+2 reg ex"),
+                 12, "Gr", "T1", "fra", "ger", 1, 0, "fra 20 own ld",
+                 13, "Gr", "T2", "fin", "rus", 0, 1, "rus 45+2 reg ld",
+                 14, "Gr", "T2", "tur", "wal", 0, 2, c("wal 42 reg ld", "wal 90+5 reg ex"),
+                 15, "Gr", "T2", "ita", "sui", 3, 0, c("ita 26 reg ld", "ita 56 reg ex", "ita 89 reg ex"),
+                 16, "Gr", "T2", "ukr", "mkd", 2, 1, c("ukr 29 reg ld", "ukr 34 reg ex", "mkd 57 reg cu"),
+                 17, "Gr", "T2", "den", "bel", 1, 2, c("den 2 reg ld", "bel 54 reg os", "bel 70 reg ex"),
+                 18, "Gr", "T2", "ned", "aut", 2, 0, c("ned 11 pen ld", "ned 67 reg ex"),
+                 19, "Gr", "T2", "swe", "svk", NA, NA, NULL,
+                 20, "Gr", "T2", "cro", "cze", NA, NA, NULL,
+                 21, "Gr", "T2", "eng", "sco", NA, NA, NULL,
+                 22, "Gr", "T2", "hun", "fra", NA, NA, NULL,
+                 23, "Gr", "T2", "por", "ger", NA, NA, NULL,
+                 24, "Gr", "T2", "esp", "pol", NA, NA, NULL,
+                 25, "Gr", "T3", "sui", "tur", NA, NA, NULL,
+                 26, "Gr", "T3", "ita", "wal", NA, NA, NULL,
+                 27, "Gr", "T3", "mkd", "ned", NA, NA, NULL,
+                 28, "Gr", "T3", "ukr", "aut", NA, NA, NULL,
+                 29, "Gr", "T3", "rus", "den", NA, NA, NULL,
+                 30, "Gr", "T3", "fin", "bel", NA, NA, NULL,
+                 31, "Gr", "T3", "cro", "sco", NA, NA, NULL,
+                 32, "Gr", "T3", "cze", "eng", NA, NA, NULL,
+                 33, "Gr", "T3", "svk", "esp", NA, NA, NULL,
+                 34, "Gr", "T3", "swe", "pol", NA, NA, NULL,
+                 35, "Gr", "T3", "por", "fra", NA, NA, NULL,
+                 36, "Gr", "T3", "ger", "hun", NA, NA, NULL,
+                 37, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 38, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 39, "Fi", "F8", "ned", NA, NA, NA, NULL,
+                 40, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 41, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 42, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 43, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 44, "Fi", "F8", NA, NA, NA, NA, NULL,
+                 45, "Fi", "F4", NA, NA, NA, NA, NULL,
+                 46, "Fi", "F4", NA, NA, NA, NA, NULL,
+                 47, "Fi", "F4", NA, NA, NA, NA, NULL,
+                 48, "Fi", "F4", NA, NA, NA, NA, NULL,
+                 49, "Fi", "F2", NA, NA, NA, NA, NULL,
+                 50, "Fi", "F2", NA, NA, NA, NA, NULL,
+                 51, "Fi", "Fi", NA, NA, NA, NA, NULL) %>%
+  mutate(across(c(Tore_H, Tore_G), ~as.integer(.)),
+         Runde = factor(Runde, levels = c("Gr", "Fi"), labels = c("Vorrunde", "Finale")),
+         Phase = factor(Phase, levels = c("T1", "T2", "T3", "F8", "F4", "F2", "Fi"),
+                        labels = c("Spieltag 1", "Spieltag 2", "Spieltag 3", "Achtelfinale", "Viertelfinale", "Halbfinale", "Finale")),
+         Tore = map(Tore, ~ tibble(data = .) %>%
                        separate(data, into = c("FIFA", "Minute_raw", "Type", "Course"), sep = " ") %>% 
                        separate(Minute_raw, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
                        mutate(across(Minute:OT, ~parse_integer(.)), # needed for later cut - only works on numbers
@@ -123,47 +126,47 @@ games <- tribble(~Game, ~Stage, ~Team_A, ~Goals_A, ~Team_B, ~Goals_B, ~Goals, # 
 # derivates ----
 ## games played ----
 games_played <- games %>%
-  filter(!is.na(Goals_A))
+  filter(!is.na(Tore_H))
 
 ## table ----
 table <- games_played %>%
-  filter(Stage == "Group") %>%
-  transmute(FIFA = Team_A,
-            Points = case_when(Goals_A > Goals_B ~ 3L,
-                               Goals_A == Goals_B ~1L,
+  filter(Runde == "Vorrunde") %>%
+  transmute(FIFA = Heim,
+            Points = case_when(Tore_H > Tore_G ~ 3L,
+                               Tore_H == Tore_G ~1L,
                                TRUE ~ 0L),
-            Diff = Goals_A - Goals_B,
-            Scored = Goals_A) %>%
+            Diff = Tore_H - Tore_G,
+            Scored = Tore_H) %>%
   bind_rows(games_played %>%
-              filter(Stage == "Group") %>%
-              transmute(FIFA = Team_B,
-                        Points = case_when(Goals_B > Goals_A ~ 3L,
-                                           Goals_B == Goals_A ~1L,
+              filter(Runde == "Vorrunde") %>%
+              transmute(FIFA = Gast,
+                        Points = case_when(Tore_G > Tore_H ~ 3L,
+                                           Tore_G == Tore_H ~1L,
                                            TRUE ~ 0L),
-                        Diff = Goals_B - Goals_A,
-                        Scored = Goals_B)) %>%
+                        Diff = Tore_G - Tore_H,
+                        Scored = Tore_G)) %>%
   left_join(groups %>% unnest(cols = FIFA), by = "FIFA") %>%
-  group_by(Group, FIFA) %>%
+  group_by(Gruppe, FIFA) %>%
   summarise(Games = n(),
             Points = sum(Points),
             Diff = sum(Diff),
             Scored = sum(Scored),
             .groups = "drop") %>%
-  arrange(Group, -Points, -Diff, -Scored) %>%
+  arrange(Gruppe, -Points, -Diff, -Scored) %>%
   left_join(teams, by = "FIFA") 
 
-group_split(table, Group)
+group_split(table, Gruppe)
 
 ## goals ----
 goals <- games_played %>%
-  select(Game, Stage, Goals) %>%
-  unnest(cols = Goals) %>% 
+  select(Spiel, Runde, Tore) %>%
+  unnest(cols = Tore) %>% 
   left_join(teams, by = "FIFA") %>%
-  relocate(Team, .after = FIFA) %>% 
+  relocate(Land, .after = FIFA) %>% 
   left_join(groups %>% unnest(cols = FIFA), by = "FIFA") %>% 
-  relocate(Group, .after = Stage) %>% 
-  left_join(locations %>% select(City, Game) %>% unnest(cols = Game), by = "Game") %>% 
-  mutate(City = factor(City, levels = locations$City))
+  relocate(Gruppe, .after = Runde) %>% 
+  left_join(locations %>% select(Stadt, Spiel) %>% unnest(cols = Spiel), by = "Spiel") %>% 
+  mutate(Stadt = factor(Stadt, levels = locations$Stadt))
 # graphics ----
 ## page 1 ----
 ggplot(goals, mapping = aes(x = 1)) +
@@ -190,7 +193,7 @@ ggplot(goals, mapping = aes(x = Time)) +
 
 windows(16, 9)
 p1 + p2 +
-  plot_annotation(title = "UEFA Euro 2020 - Goals") &
+  plot_annotation(title = "UEFA Euro 2020 - Tore") &
   plot_layout(guides = "collect") &
   theme(legend.position = "top") -> p
 plot(p)
@@ -220,7 +223,7 @@ ggplot(goals, mapping = aes(x = Minute)) +
         axis.title.y = element_blank(),
         axis.text.y = element_blank()) -> p2
 
-ggplot(goals, mapping = aes(x = City)) +
+ggplot(goals, mapping = aes(x = Stadt)) +
   geom_bar(mapping = aes(fill = fct_rev(Time)), show.legend = FALSE) +
   scale_x_discrete(expand = c(.01, .01), guide = guide_axis(n.dodge = 2), drop = FALSE) +
   scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
@@ -231,17 +234,18 @@ ggplot(goals, mapping = aes(x = City)) +
 windows(16, 9)
 p1 / p2 + p3 +
   plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
-  plot_annotation(title = "UEFA Euro 2020 - Goals") -> p 
+  plot_annotation(title = "UEFA Euro 2020 - Tore") -> p 
 plot(p)
 P2 <- p
 rm(p1, p2, p3, p)
 
+
 ## page 3 ----
 games_played %>% 
-  transmute(Stage, FIFA = Team_A, For = Goals_A, Against = Goals_B) %>%
+  transmute(Runde, FIFA = Heim, For = Tore_H, Against = Tore_G) %>%
   bind_rows(games_played %>%
-              transmute(Stage, FIFA = Team_B, For = Goals_B, Against = Goals_A)) %>%
-  group_by(FIFA, Stage) %>%
+              transmute(Runde, FIFA = Gast, For = Tore_G, Against = Tore_H)) %>%
+  group_by(FIFA, Runde) %>%
   summarise(For = sum(For), Against = sum(Against), .groups = "drop") %>%
   mutate(Diff = For - Against) %>%
   arrange(-Diff, -For) %>%
@@ -252,7 +256,7 @@ games_played %>%
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
   geom_point(mapping = aes(x = Rank, y = Diff), stroke = 2, shape = 4, color = "gold") +
   geom_text(mapping = aes(x = Rank, label = reorder(FIFA, Rank, sum)), y = 0, size = 3.5) +
-  labs(title = "UEFA Euro 2020 - Group Stage", subtitle = "Goals 'for' and 'against' Team") +
+  labs(title = "UEFA Euro 2020", subtitle = "Tore 'für' und 'gegen' das jeweilige Team") +
   theme_bw() +
   theme(axis.title = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -267,7 +271,7 @@ P3 <- p
 rm(p)
 
 ## pdf ----
-pdf("Fussball/Euro2020/Euro2020.pdf", paper = "a4r", width = 16, height = 9)
+pdf("Fussball/Euro2020/Euro2020.pdf", paper = "a4r", width = 16, height = 9) #Fussball/Euro2020/
 plot(P1)
 plot(P2)
 plot(P3)
