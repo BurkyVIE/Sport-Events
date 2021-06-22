@@ -205,12 +205,13 @@ rm(p)
 ggplot(goals, mapping = aes(x = 1)) +
   geom_bar(mapping = aes(fill = fct_rev(Typ)), show.legend = FALSE) +
   scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
-  scale_y_continuous(minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 10), minor_breaks = function(x) seq(0, x[2], by = 5)) +
   scale_fill_manual(name = "", values = colors[1:3]) +
   coord_polar(theta = "y") +
   theme_minimal() +
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_line(linetype = "dashed"),
         axis.title = element_blank(),
         axis.text.y = element_blank()) -> p1
 
@@ -303,7 +304,7 @@ P4 <- p
 rm(p)
 
 ## pdf ----
-pdf("Euro2020.pdf", paper = "a4r", width = 16, height = 9) #Fussball/Euro2020/
+pdf("Fussball/Euro2020/Euro2020.pdf", paper = "a4r", width = 16, height = 9) #Fussball/Euro2020/
 plot(P1)
 plot(P2)
 plot(P3)
