@@ -122,7 +122,7 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                        mutate(across(Minute:OT, ~parse_integer(.)), # needed for later cut - only works on numbers
                               Typ = factor(Typ, levels = c("reg", "own", "pen"), labels = c("aus dem Spiel", "Eigentor", "Elfmeter")),
                               Verlauf = factor(Verlauf, levels = c("ld", "ex", "cu", "os"), labels = c("Führung", "Ausbau", "Anschluss", "Ausgleich")),
-                              Time = cut(Minute, seq(0, 120, by = 15), right = TRUE))))
+                              Zeit = cut(Minute, seq(0, 120, by = 15), right = TRUE))))
   
 # Bestimme Gewinner; berücksichtigt Elferschießen
 games <- games %>% 
@@ -183,6 +183,25 @@ goals <- games_played %>%
   mutate(Stadt = factor(Stadt, levels = locations$Stadt))
 # graphics ----
 ## page 1 ----
+goals %>%
+  filter(Runde == "Vorrunde") %>% 
+  mutate(Gruppe = paste("Gruppe", Gruppe)) %>% 
+  ggplot(mapping = aes(x = Zeit)) +
+  geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
+  scale_x_discrete(expand = c(.01, .01)) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  facet_wrap(~Gruppe) +
+  labs(title = "UEFA Euro 2020 - Tore in der Vorrunde") +
+  theme_minimal()  +
+  theme(axis.text.x = element_text(angle = 60),
+        panel.spacing.x = unit(3, "lines")) -> p
+windows(16, 9)
+plot(p)
+P1 <- p     
+rm(p)
+  
+## page 2 ----
 ggplot(goals, mapping = aes(x = 1)) +
   geom_bar(mapping = aes(fill = fct_rev(Typ)), show.legend = FALSE) +
   scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
@@ -195,7 +214,7 @@ ggplot(goals, mapping = aes(x = 1)) +
         axis.title = element_blank(),
         axis.text.y = element_blank()) -> p1
 
-ggplot(goals, mapping = aes(x = Time)) +
+ggplot(goals, mapping = aes(x = Zeit)) +
   geom_bar(mapping = aes(fill = fct_rev(Typ))) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # Sicherstellen das erster und
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # letzter 'Bar' dargestellt werden
@@ -211,12 +230,12 @@ p1 + p2 +
   plot_layout(guides = "collect") &
   theme(legend.position = "top") -> p
 plot(p)
-P1 <- p
+P2 <- p
 rm(p1, p2, p)
 
-## page 2 ----
-ggplot(goals, mapping = aes(x = Time)) +
-  geom_bar(mapping = aes(fill = Time), show.legend = FALSE) +
+## page 3 ----
+ggplot(goals, mapping = aes(x = Zeit)) +
+  geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
@@ -227,7 +246,7 @@ ggplot(goals, mapping = aes(x = Time)) +
         axis.title.x = element_blank()) -> p1
 
 ggplot(goals, mapping = aes(x = Minute)) +
-  geom_boxplot(size = 1.5, color = colors["aus dem Spiel"]) +
+  geom_boxplot(size = 1.5, color = "black") +
   scale_x_continuous(limits = c(0, 120), breaks = seq(0, 120, by = 15), minor_breaks = seq(0, 120, by = 5), expand = c(.01, .01)) +
   scale_y_continuous(expand = c(.1, .1)) +
   theme_minimal() +
@@ -238,7 +257,7 @@ ggplot(goals, mapping = aes(x = Minute)) +
         axis.text.y = element_blank()) -> p2
 
 ggplot(goals, mapping = aes(x = Stadt)) +
-  geom_bar(mapping = aes(fill = fct_rev(Time)), show.legend = FALSE) +
+  geom_bar(mapping = aes(fill = fct_rev(Zeit)), show.legend = FALSE) +
   scale_x_discrete(expand = c(.01, .01), guide = guide_axis(n.dodge = 2), drop = FALSE) +
   scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
@@ -250,11 +269,10 @@ p1 / p2 + p3 +
   plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
   plot_annotation(title = "UEFA Euro 2020 - Tore") -> p 
 plot(p)
-P2 <- p
+P3 <- p
 rm(p1, p2, p3, p)
 
-
-## page 3 ----
+## page 4 ----
 games_played %>% 
   transmute(Runde, FIFA = Heim, For = Tore_H, Against = Tore_G) %>%
   bind_rows(games_played %>%
@@ -281,16 +299,17 @@ games_played %>%
         axis.line.y = element_line(color = "black")) -> p
 windows(16, 9)
 plot(p)
-P3 <- p     
+P4 <- p     
 rm(p)
 
 ## pdf ----
-pdf("Fussball/Euro2020/Euro2020.pdf", paper = "a4r", width = 16, height = 9) #Fussball/Euro2020/
+pdf("Euro2020.pdf", paper = "a4r", width = 16, height = 9) #Fussball/Euro2020/
 plot(P1)
 plot(P2)
 plot(P3)
+plot(P4)
 dev.off()
-rm(P1, P2, P3)
+rm(P1, P2, P3, P4)
 
 # clean up ----
 rm(colors, games_played) # helpers
