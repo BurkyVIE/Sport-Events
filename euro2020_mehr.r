@@ -194,8 +194,7 @@ goals %>%
   facet_wrap(~Gruppe) +
   labs(title = "UEFA Euro 2020 - Tore in der Vorrunde") +
   theme_minimal()  +
-  theme(axis.text.x = element_text(angle = 60),
-        panel.spacing.x = unit(3, "lines")) -> p
+  theme(panel.spacing.x = unit(3, "lines")) -> p
 windows(16, 9)
 plot(p)
 P1 <- p     
