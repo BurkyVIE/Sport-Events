@@ -2,7 +2,8 @@
 require(tidyverse)
 library(patchwork)
 
-colors <- c("forestgreen", "gold", "orangered", colorRampPalette(c("forestgreen", "#d0f0c0"))(8)) %>%  # penalty + own goal + regular + 8 sequential: RColorBrewer::brewer.pal(9, "YlGn")[9:2])
+# colors <- c("forestgreen", "gold", "orangered", colorRampPalette(c("forestgreen", "#d0f0c0"))(8)) %>%  # penalty + own goal + regular + 8 sequential: RColorBrewer::brewer.pal(9, "YlGn")[9:2])
+colors <- c("forestgreen", "gold", "orangered", colorRampPalette(c("#006300", "#b5ff2a"))(8)) %>%  # "#b5ff2a", "#f6ff04", "#ff9d00"
   set_names(c("aus dem Spiel", "Eigentor", "Elfmeter", "(0,15]", "(15,30]", "(30,45]", "(45,60]", "(60,75]", "(75,90]", "(90,105]", "(105,120]"))
 
 # data ----
