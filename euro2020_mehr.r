@@ -278,7 +278,6 @@ games_played %>%
   transmute(Runde, FIFA = Heim, Erzielt = Tore_H, Kassiert = Tore_G) %>%
   bind_rows(games_played %>%
               transmute(Runde, FIFA = Gast, Erzielt = Tore_G, Kassiert = Tore_H)) %>%
-  mutate(Runde = factor(Runde, levels = c("Vorrunde", "Finale"))) %>% 
   group_by(FIFA, Runde) %>%
   summarise(Erzielt = sum(Erzielt), Kassiert = sum(Kassiert), .groups = "drop") %>%
   pivot_wider(names_from = Runde, values_from = c(Erzielt, Kassiert)) %>% 
