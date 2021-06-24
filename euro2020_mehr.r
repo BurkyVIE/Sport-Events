@@ -275,29 +275,30 @@ rm(p1, p2, p3, p)
 
 ## page 4 ----
 games_played %>% 
-  transmute(Runde, FIFA = Heim, For = Tore_H, Against = Tore_G) %>%
+  transmute(Runde, FIFA = Heim, Erzielt = Tore_H, Kassiert = Tore_G) %>%
   bind_rows(games_played %>%
-              transmute(Runde, FIFA = Gast, For = Tore_G, Against = Tore_H)) %>%
+              transmute(Runde, FIFA = Gast, Erzielt = Tore_G, Kassiert = Tore_H)) %>%
   group_by(FIFA, Runde) %>%
-  summarise(For = sum(For), Against = sum(Against), .groups = "drop") %>%
-  mutate(Diff = For - Against) %>%
-  arrange(-Diff, -For) %>%
-  rowid_to_column(var = "Rank") %>% 
-  ggplot(mapping = aes(x = reorder(FIFA, Rank, sum))) +
-  geom_bar(mapping = aes(y = For), stat = "identity", fill = "forestgreen") +
-  geom_bar(mapping = aes(y = -Against), stat = "identity", fill = "firebrick") +
+  summarise(Erzielt = sum(Erzielt), Kassiert = sum(Kassiert), .groups = "drop") %>%
+  pivot_wider(names_from = Runde, values_from = c(Erzielt, Kassiert)) %>% 
+  mutate(across(starts_with("Kassiert_"), ~. * -1)) %>% 
+  replace_na(list("Erzielt_Finale" = 0, "Erzielt_Vorrunde" = 0, "Kassiert_Finale" = 0, "Kassiert_Vorrunde" = 0)) %>% 
+  mutate(Diff = Erzielt_Finale + Erzielt_Vorrunde + Kassiert_Finale + Kassiert_Vorrunde,
+         Erzielt = Erzielt_Finale + Erzielt_Vorrunde) %>% 
+  pivot_longer(-c(FIFA, Diff, Erzielt), names_to = "Tore", values_to = "Anzahl") %>%
+  ggplot(mapping = aes(x = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = Anzahl, fill = Tore)) +
+  geom_col() +
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
-  geom_point(mapping = aes(x = Rank, y = Diff), stroke = 2, shape = 4, color = "gold") +
-  geom_text(mapping = aes(x = Rank, label = reorder(FIFA, Rank, sum)), y = 0, size = 3.5) +
+  geom_point(mapping = aes(x = FIFA, y = Diff), stroke = 2, shape = 4, color = "gold", show.legend = FALSE) +
+  geom_text(mapping = aes(x = FIFA, label = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = 0), size = 3.5) +
+  scale_fill_manual(values = c("Erzielt_Finale" = colorspace::lighten("forestgreen"), "Erzielt_Vorrunde" = "forestgreen", "Kassiert_Finale" = colorspace::lighten("firebrick"), "Kassiert_Vorrunde" = "firebrick")) +
   labs(title = "UEFA Euro 2020", subtitle = "Tore 'für' und 'gegen' das jeweilige Team") +
-  theme_bw() +
+  theme_minimal() +
   theme(axis.title = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
-        panel.border = element_blank(),
         axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        axis.line.y = element_line(color = "black")) -> p
+        axis.ticks.x = element_blank()) -> p
 windows(16, 9)
 plot(p)
 P4 <- p     
