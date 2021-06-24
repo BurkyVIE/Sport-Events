@@ -316,7 +316,7 @@ games_played %>%
   scale_y_continuous(name = "count", breaks = function(x) seq(-20, x[2], by = 5), minor_breaks = function(x) seq(-20, x[2], by = 2)) +
   labs(title = "UEFA Euro 2020", subtitle = "Tore 'für' und 'gegen' das jeweilige Team") +
   theme_minimal() +
-  theme(axis.title = element_blank(),
+  theme(axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         axis.text.x = element_blank(),
