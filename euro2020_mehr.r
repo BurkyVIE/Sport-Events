@@ -202,7 +202,7 @@ ggplot(goals, mapping = aes(x = Zeit)) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # Sicherstellen das erster und
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # letzter 'Bar' dargestellt werden
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(name = "Tore", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors[1:3]) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p2
@@ -222,7 +222,7 @@ ggplot(goals, mapping = aes(x = Zeit)) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # last bars are plotted
   scale_x_discrete(expand = c(.01, .01), drop = FALSE) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(name = "Tore", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_line(linetype = "dashed"),
@@ -242,7 +242,7 @@ ggplot(goals, mapping = aes(x = Minute)) +
 ggplot(goals, mapping = aes(x = Stadt)) +
   geom_bar(mapping = aes(fill = fct_rev(Zeit)), show.legend = FALSE) +
   scale_x_discrete(expand = c(.01, .01), guide = guide_axis(n.dodge = 2), drop = FALSE) +
-  scale_y_continuous(breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(name = "Tore", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   theme_minimal() +
   theme(panel.grid.minor.y = element_line(linetype = "dashed")) -> p3
@@ -262,7 +262,7 @@ goals %>%
   ggplot(mapping = aes(x = Zeit)) +
   geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
   scale_x_discrete(expand = c(.01, .01)) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(name = "Tore", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   facet_wrap(~Gruppe) +
   labs(title = "UEFA Euro 2020 - Tore in der Vorrunde") +
@@ -281,7 +281,7 @@ goals %>%
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # Sicherstellen das erster und
   geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # letzter 'Bar' dargestellt werden
   scale_x_discrete(expand = c(.01, .01), drop = FALSE, guide = guide_axis(n.dodge = 2)) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_y_continuous(name = "Tore", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   facet_wrap(~Runde + Verlauf, ncol = 4, drop = FALSE) +
   labs(title = "UEFA Euro 2020 - Tore nach Verlauf") +
@@ -294,33 +294,35 @@ rm(p)
 
 ## page 5 ----
 games_played %>% 
-  transmute(Runde, FIFA = Heim, Erzielt = Tore_H, Kassiert = Tore_G) %>%
+  transmute(Runde, FIFA = Heim, erzielt = Tore_H, kassiert = Tore_G) %>%
   bind_rows(games_played %>%
-              transmute(Runde, FIFA = Gast, Erzielt = Tore_G, Kassiert = Tore_H)) %>%
+              transmute(Runde, FIFA = Gast, erzielt = Tore_G, kassiert = Tore_H)) %>%
   group_by(FIFA, Runde) %>%
-  summarise(Erzielt = sum(Erzielt), Kassiert = sum(Kassiert), .groups = "drop") %>%
-  pivot_wider(names_from = Runde, values_from = c(Erzielt, Kassiert)) %>% 
-  mutate(across(starts_with("Kassiert_"), ~. * -1),
+  summarise(erzielt = sum(erzielt), kassiert = sum(kassiert), .groups = "drop") %>%
+  pivot_wider(names_from = Runde, values_from = c(erzielt, kassiert), names_sep = "-") %>% 
+  mutate(across(starts_with("kassiert"), ~. * -1),
          across(!FIFA, ~coalesce(., 0))) %>% 
   rowwise() %>% 
   mutate(Diff = sum(c_across(!FIFA)),
-         Erzielt = sum(c_across(starts_with("Erzielt_")))) %>% 
-  pivot_longer(-c(FIFA, Diff, Erzielt), names_to = "Tore", values_to = "Anzahl") -> he
+         erzielt = sum(c_across(starts_with("erzielt")))) %>% 
+  pivot_longer(-c(FIFA, Diff, erzielt), names_to = "Tore", values_to = "Anzahl") -> he
 
-  ggplot(data = he, mapping = aes(x = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = Anzahl)) +
+  ggplot(data = he, mapping = aes(x = reorder(reorder(FIFA, -erzielt, sum), -Diff, sum), y = Anzahl)) +
   geom_col(mapping = aes(fill = Tore)) +
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
   geom_point(mapping = aes(x = FIFA, y = Diff), stroke = 2, shape = 4, color = "gold", show.legend = FALSE) +
-  geom_text(data = he %>% select(FIFA:Erzielt) %>% unique(), mapping = aes(x = FIFA, label = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = 0), size = 3.5) +
-  scale_fill_manual(values = c("Erzielt_Finale" = colorspace::lighten("forestgreen"), "Erzielt_Vorrunde" = "forestgreen", "Kassiert_Finale" = colorspace::lighten("firebrick"), "Kassiert_Vorrunde" = "firebrick")) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(-20, x[2], by = 5), minor_breaks = function(x) seq(-20, x[2], by = 2)) +
+  geom_text(data = he %>% select(FIFA:erzielt) %>% unique(), mapping = aes(x = FIFA, label = reorder(reorder(FIFA, -erzielt, sum), -Diff, sum), y = 0), size = 3.5) +
+  scale_fill_manual(values = c("erzielt-Finale" = colorspace::lighten("forestgreen"), "erzielt-Vorrunde" = "forestgreen",
+                               "kassiert-Finale" = colorspace::lighten("firebrick"), "kassiert-Vorrunde" = "firebrick")) +
+  scale_y_continuous(name = "Tore", breaks = function(x) seq(-20, x[2], by = 5), minor_breaks = function(x) seq(-20, x[2], by = 2)) +
   labs(title = "UEFA Euro 2020", subtitle = "Tore 'für' und 'gegen' das jeweilige Team") +
   theme_minimal() +
   theme(axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()) -> p
+        axis.ticks.x = element_blank(),
+        legend.position = "bottom") -> p
 windows(16, 9)
 plot(p)
 P5 <- p     
