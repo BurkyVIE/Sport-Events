@@ -277,13 +277,15 @@ goals %>%
   mutate(Gruppe = paste("Gruppe", Gruppe)) %>% 
   ggplot(mapping = aes(x = Zeit)) +
   geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
-  scale_x_discrete(expand = c(.01, .01)) +
+  geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # Sicherstellen das erster und
+  geom_bar(mapping = aes(x = "(105,120]", y = .01), stat = "identity", fill = NA) + # letzter 'Bar' dargestellt werden
+  scale_x_discrete(expand = c(.01, .01), drop = FALSE, guide = guide_axis(n.dodge = 2)) +
   scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
   scale_fill_manual(name = "", values = colors) +
   facet_wrap(~Runde + Verlauf, ncol = 4, drop = FALSE) +
   labs(title = "UEFA Euro 2020 - Tore nach Verlauf") +
   theme_minimal()  +
-  theme(panel.spacing.x = unit(3, "lines")) -> p
+  theme(panel.spacing.x = unit(2, "lines")) -> p
 windows(16, 9)
 plot(p)
 P4 <- p     
