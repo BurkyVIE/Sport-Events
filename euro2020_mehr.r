@@ -282,9 +282,9 @@ games_played %>%
   group_by(FIFA, Runde) %>%
   summarise(Erzielt = sum(Erzielt), Kassiert = sum(Kassiert), .groups = "drop") %>%
   pivot_wider(names_from = Runde, values_from = c(Erzielt, Kassiert)) %>% 
-  mutate(across(starts_with("Kassiert_"), ~. * -1)) %>% 
-  replace_na(list("Erzielt_Finale" = 0, "Erzielt_Vorrunde" = 0, "Kassiert_Finale" = 0, "Kassiert_Vorrunde" = 0)) %>% 
-  mutate(Diff = Erzielt_Finale + Erzielt_Vorrunde + Kassiert_Finale + Kassiert_Vorrunde,
+  mutate(across(starts_with("Kassiert_"), ~. * -1),
+         across(!FIFA, ~coalesce(., 0)),
+         Diff = Erzielt_Finale + Erzielt_Vorrunde + Kassiert_Finale + Kassiert_Vorrunde,
          Erzielt = Erzielt_Finale + Erzielt_Vorrunde) %>% 
   pivot_longer(-c(FIFA, Diff, Erzielt), names_to = "Tore", values_to = "Anzahl") %>%
   ggplot(mapping = aes(x = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = Anzahl, fill = Tore)) +
