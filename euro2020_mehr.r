@@ -174,7 +174,7 @@ group_split(table, Gruppe)
 
 ## goals ----
 goals <- games_played %>%
-  select(Spiel, Runde, Tore) %>%
+  select(Spiel, Runde, Phase, Tore) %>%
   unnest(cols = Tore) %>% 
   left_join(teams, by = "FIFA") %>%
   relocate(Land, .after = FIFA) %>% 
@@ -182,6 +182,7 @@ goals <- games_played %>%
   relocate(Gruppe, .after = Runde) %>% 
   left_join(locations %>% select(Stadt, Spiel) %>% unnest(cols = Spiel), by = "Spiel") %>% 
   mutate(Stadt = factor(Stadt, levels = locations$Stadt))
+
 # graphics ----
 ## page 1 ----
 ggplot(goals, mapping = aes(x = 1)) +
