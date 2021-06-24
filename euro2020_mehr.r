@@ -96,7 +96,7 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                  34, "Gr T3", "swe pol", 3, 2, c("swe 2 reg ld", "swe 59 reg ex", "pol 61 reg cu", "pol 84 reg os", "swe 90+3 reg ld"),
                  35, "Gr T3", "por fra", 2, 2, c("por 30 pen ld", "fra 45+2 pen os", "fra 47 reg ld", "por 60 pen os"),
                  36, "Gr T3", "ger hun", 2, 2, c("hun 11 reg ld", "ger 66 reg os", "hun 68 reg ld", "ger 84 reg os"),
-                 37, "Fi F8", "wal den", NA, NA, NULL,
+                 37, "Fi F8", "wal den", 0, 0, NULL,
                  38, "Fi F8", "ita aut", NA, NA, NULL,
                  39, "Fi F8", "ned cze", NA, NA, NULL,
                  40, "Fi F8", "bel por", NA, NA, NULL,
@@ -278,6 +278,7 @@ games_played %>%
   transmute(Runde, FIFA = Heim, Erzielt = Tore_H, Kassiert = Tore_G) %>%
   bind_rows(games_played %>%
               transmute(Runde, FIFA = Gast, Erzielt = Tore_G, Kassiert = Tore_H)) %>%
+  mutate(Runde = factor(Runde, levels = c("Vorrunde", "Finale"))) %>% 
   group_by(FIFA, Runde) %>%
   summarise(Erzielt = sum(Erzielt), Kassiert = sum(Kassiert), .groups = "drop") %>%
   pivot_wider(names_from = Runde, values_from = c(Erzielt, Kassiert)) %>% 
@@ -292,6 +293,7 @@ games_played %>%
   geom_point(mapping = aes(x = FIFA, y = Diff), stroke = 2, shape = 4, color = "gold", show.legend = FALSE) +
   geom_text(mapping = aes(x = FIFA, label = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = 0), size = 3.5) +
   scale_fill_manual(values = c("Erzielt_Finale" = colorspace::lighten("forestgreen"), "Erzielt_Vorrunde" = "forestgreen", "Kassiert_Finale" = colorspace::lighten("firebrick"), "Kassiert_Vorrunde" = "firebrick")) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(-20, x[2], by = 5), minor_breaks = function(x) seq(-20, x[2], by = 2)) +
   labs(title = "UEFA Euro 2020", subtitle = "Tore 'für' und 'gegen' das jeweilige Team") +
   theme_minimal() +
   theme(axis.title = element_blank(),
