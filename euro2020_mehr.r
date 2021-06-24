@@ -96,7 +96,7 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                  34, "Gr T3", "swe pol", 3, 2, c("swe 2 reg ld", "swe 59 reg ex", "pol 61 reg cu", "pol 84 reg os", "swe 90+3 reg ld"),
                  35, "Gr T3", "por fra", 2, 2, c("por 30 pen ld", "fra 45+2 pen os", "fra 47 reg ld", "por 60 pen os"),
                  36, "Gr T3", "ger hun", 2, 2, c("hun 11 reg ld", "ger 66 reg os", "hun 68 reg ld", "ger 84 reg os"),
-                 37, "Fi F8", "wal den", 0, 0, NULL,
+                 37, "Fi F8", "wal den", NA, NA, NULL,
                  38, "Fi F8", "ita aut", NA, NA, NULL,
                  39, "Fi F8", "ned cze", NA, NA, NULL,
                  40, "Fi F8", "bel por", NA, NA, NULL,
