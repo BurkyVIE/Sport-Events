@@ -184,24 +184,6 @@ goals <- games_played %>%
   mutate(Stadt = factor(Stadt, levels = locations$Stadt))
 # graphics ----
 ## page 1 ----
-goals %>%
-  filter(Runde == "Vorrunde") %>% 
-  mutate(Gruppe = paste("Gruppe", Gruppe)) %>% 
-  ggplot(mapping = aes(x = Zeit)) +
-  geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
-  scale_x_discrete(expand = c(.01, .01)) +
-  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
-  scale_fill_manual(name = "", values = colors) +
-  facet_wrap(~Gruppe) +
-  labs(title = "UEFA Euro 2020 - Tore in der Vorrunde") +
-  theme_minimal()  +
-  theme(panel.spacing.x = unit(3, "lines")) -> p
-windows(16, 9)
-plot(p)
-P1 <- p     
-rm(p)
-  
-## page 2 ----
 ggplot(goals, mapping = aes(x = 1)) +
   geom_bar(mapping = aes(fill = fct_rev(Typ)), show.legend = FALSE) +
   scale_x_discrete(expand = expansion(mult = c(.5, .01))) +
@@ -211,7 +193,6 @@ ggplot(goals, mapping = aes(x = 1)) +
   theme_minimal() +
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_line(linetype = "dashed"),
         axis.title = element_blank(),
         axis.text.y = element_blank()) -> p1
 
@@ -231,10 +212,10 @@ p1 + p2 +
   plot_layout(guides = "collect") &
   theme(legend.position = "top") -> p
 plot(p)
-P2 <- p
+P1 <- p
 rm(p1, p2, p)
 
-## page 3 ----
+## page 2 ----
 ggplot(goals, mapping = aes(x = Zeit)) +
   geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
   geom_bar(mapping = aes(x = "(0,15]", y = .01), stat = "identity", fill = NA) +    # make sure first and
@@ -270,10 +251,45 @@ p1 / p2 + p3 +
   plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
   plot_annotation(title = "UEFA Euro 2020 - Tore") -> p 
 plot(p)
-P3 <- p
+P2 <- p
 rm(p1, p2, p3, p)
 
+## page 3 ----
+goals %>%
+  filter(Runde == "Vorrunde") %>% 
+  mutate(Gruppe = paste("Gruppe", Gruppe)) %>% 
+  ggplot(mapping = aes(x = Zeit)) +
+  geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
+  scale_x_discrete(expand = c(.01, .01)) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  facet_wrap(~Gruppe) +
+  labs(title = "UEFA Euro 2020 - Tore in der Vorrunde") +
+  theme_minimal()  +
+  theme(panel.spacing.x = unit(3, "lines")) -> p
+windows(16, 9)
+plot(p)
+P3 <- p     
+rm(p)
+
 ## page 4 ----
+goals %>%
+  mutate(Gruppe = paste("Gruppe", Gruppe)) %>% 
+  ggplot(mapping = aes(x = Zeit)) +
+  geom_bar(mapping = aes(fill = Zeit), show.legend = FALSE) +
+  scale_x_discrete(expand = c(.01, .01)) +
+  scale_y_continuous(name = "count", breaks = function(x) seq(0, x[2], by = 5), minor_breaks = function(x) seq(0, x[2], by = 2)) +
+  scale_fill_manual(name = "", values = colors) +
+  facet_wrap(~Runde + Verlauf, ncol = 4, drop = FALSE) +
+  labs(title = "UEFA Euro 2020 - Tore nach Verlauf") +
+  theme_minimal()  +
+  theme(panel.spacing.x = unit(3, "lines")) -> p
+windows(16, 9)
+plot(p)
+P4 <- p     
+rm(p)
+
+## page 5 ----
 games_played %>% 
   transmute(Runde, FIFA = Heim, Erzielt = Tore_H, Kassiert = Tore_G) %>%
   bind_rows(games_played %>%
@@ -286,12 +302,13 @@ games_played %>%
   rowwise() %>% 
   mutate(Diff = sum(c_across(!FIFA)),
          Erzielt = sum(c_across(starts_with("Erzielt_")))) %>% 
-  pivot_longer(-c(FIFA, Diff, Erzielt), names_to = "Tore", values_to = "Anzahl") %>%
-  ggplot(mapping = aes(x = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = Anzahl, fill = Tore)) +
-  geom_col() +
+  pivot_longer(-c(FIFA, Diff, Erzielt), names_to = "Tore", values_to = "Anzahl") -> he
+
+  ggplot(data = he, mapping = aes(x = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = Anzahl)) +
+  geom_col(mapping = aes(fill = Tore)) +
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
   geom_point(mapping = aes(x = FIFA, y = Diff), stroke = 2, shape = 4, color = "gold", show.legend = FALSE) +
-  geom_text(mapping = aes(x = FIFA, label = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = 0), size = 3.5) +
+  geom_text(data = he %>% select(FIFA:Erzielt) %>% unique(), mapping = aes(x = FIFA, label = reorder(reorder(FIFA, -Erzielt, sum), -Diff, sum), y = 0), size = 3.5) +
   scale_fill_manual(values = c("Erzielt_Finale" = colorspace::lighten("forestgreen"), "Erzielt_Vorrunde" = "forestgreen", "Kassiert_Finale" = colorspace::lighten("firebrick"), "Kassiert_Vorrunde" = "firebrick")) +
   scale_y_continuous(name = "count", breaks = function(x) seq(-20, x[2], by = 5), minor_breaks = function(x) seq(-20, x[2], by = 2)) +
   labs(title = "UEFA Euro 2020", subtitle = "Tore 'für' und 'gegen' das jeweilige Team") +
@@ -303,8 +320,8 @@ games_played %>%
         axis.ticks.x = element_blank()) -> p
 windows(16, 9)
 plot(p)
-P4 <- p     
-rm(p)
+P5 <- p     
+rm(he, p)
 
 ## pdf ----
 pdf("Fussball/Euro2020/Euro2020.pdf", paper = "a4r", width = 16, height = 9) #Fussball/Euro2020/
@@ -312,8 +329,9 @@ plot(P1)
 plot(P2)
 plot(P3)
 plot(P4)
+plot(P5)
 dev.off()
-rm(P1, P2, P3, P4)
+rm(P1, P2, P3, P4, P5)
 
 # clean up ----
 rm(colors, games_played) # helpers
