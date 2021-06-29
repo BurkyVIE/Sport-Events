@@ -175,7 +175,8 @@ group_split(table, Gruppe)
 ## goals ----
 goals <- games_played %>%
   select(Spiel, Runde, Phase, Tore) %>%
-  unnest(cols = Tore) %>% 
+  unnest(cols = Tore) %>%  
+  filter(!is.na(Minute)) %>% # keine Tore aus Elferschießen
   left_join(teams, by = "FIFA") %>%
   relocate(Land, .after = FIFA) %>% 
   left_join(groups %>% unnest(cols = FIFA), by = "FIFA") %>% 
