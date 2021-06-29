@@ -59,7 +59,7 @@ locations <- tribble(~Stadt, ~Stadion, ~Spiel,
 
 
 ## Spiele ----
-games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard: No, "Runde Phase", "Heim Gast", NA, NA, NULL; Abkürzungen in den 'mutate'-Statements
+games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard: Start, "Runde Phase", "Heim Gast", NA, NA, NULL; Abkürzungen in den 'mutate'-Statements
                  "2021/6/11/21/0", "Gr T1", "tur ita", 0, 3, c("ita 53 own ld", "ita 66 reg ex", "ita 79 reg ex"),
                  "2021/6/12/15/0", "Gr T1", "wal sui", 1, 1, c("sui 49 reg ld", "wal 74 reg os"),
                  "2021/6/12/18/0", "Gr T1", "den fin", 0, 1, "fin 60 reg ld",
