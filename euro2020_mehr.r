@@ -251,7 +251,7 @@ ggplot(goals, mapping = aes(x = Stadt)) +
 windows(16, 9)
 p1 / p2 + p3 +
   plot_layout(design = "AC\nAC\nAC\nAC\nAC\nAC\nBC") +
-  plot_annotation(title = "UEFA Euro 2020 - Tore") -> p 
+  plot_annotation(title = "UEFA Euro 2020 - Tore nach Zeit bzw. Ort") -> p 
 plot(p)
 P2 <- p
 rm(p1, p2, p3, p)
