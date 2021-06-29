@@ -139,7 +139,8 @@ games <- games %>%
   select(-he) %>%
   right_join(games, by = "Spiel") %>% 
   relocate(Sieger, .after = Tore) %>% 
-  rowwise() %>% mutate(Ergebnis = paste(sort(c(Tore_H, Tore_G), decreasing = TRUE), collapse = ":"))
+  rowwise() %>% mutate(Ergebnis = paste(sort(c(Tore_H, Tore_G), decreasing = TRUE), collapse = ":"),
+                       Tore_ges = Tore_H + Tore_G)
 
 # derivates ----
 ## games played ----
