@@ -100,8 +100,8 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                  38, "Fi F8", "ita aut", 2, 1, c("ita 95 reg ld", "ita 105 reg ex", "aut 114 reg cu"),
                  39, "Fi F8", "ned cze", 0, 2, c("cze 68 reg ld", "cze 80 reg ex"),
                  40, "Fi F8", "bel por", 1, 0, "bel 42 reg ld",
-                 41, "Fi F8", "cro esp", NA, NA, NULL,
-                 42, "Fi F8", "fra sui", NA, NA, NULL,
+                 41, "Fi F8", "cro esp", 3, 5, c("cro 20 own ld", "esp 38 reg os","esp 57 reg ld", "esp 76 reg ex", "cro 85 reg cu", "cro 90+2 reg os", "esp 100 reg ld", "esp 103 reg ex"),
+                 42, "Fi F8", "fra sui", 3, 3, c("sui 15 reg ld", "fra 57 reg os", "fra 59 reg ld", "fra 75 reg ex", "sui 68 reg cu", "fra 90 reg os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld"),
                  43, "Fi F8", "eng ger", NA, NA, NULL,
                  44, "Fi F8", "swe ukr", NA, NA, NULL,
                  45, "Fi F4", NA, NA, NA, NULL,
@@ -118,13 +118,13 @@ games <- tribble(~Spiel, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standard
                         labels = c("1. Spieltag", "2. Spieltag", "3. Spieltag", "Achtelfinale", "Viertelfinale", "Halbfinale", "Finale")),
          across(c(Tore_H, Tore_G), ~as.integer(.)),
          Tore = map(Tore, ~ tibble(data = .) %>%
-                       separate(data, into = c("FIFA", "Minute_roh", "Typ", "Verlauf"), sep = " ") %>% 
-                       separate(Minute_roh, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
-                       mutate(across(Minute:OT, ~parse_integer(.)), # needed for later cut - only works on numbers
-                              Typ = factor(Typ, levels = c("reg", "own", "pen"), labels = c("aus dem Spiel", "Eigentor", "Elfmeter")),
-                              Verlauf = factor(Verlauf, levels = c("ld", "ex", "cu", "os"), labels = c("Führung", "Ausbau", "Anschluss", "Ausgleich")),
-                              Zeit = cut(Minute, seq(0, 120, by = 15), right = TRUE))))
-  
+                      separate(data, into = c("FIFA", "Minute_roh", "Typ", "Verlauf"), sep = " ") %>% 
+                      separate(Minute_roh, into = c("Minute", "OT"), sep = "\\+", fill = "right") %>%
+                      mutate(across(Minute:OT, ~parse_integer(.)), # needed for later cut - only works on numbers
+                             Typ = factor(Typ, levels = c("reg", "own", "pen"), labels = c("aus dem Spiel", "Eigentor", "Elfmeter")),
+                             Verlauf = factor(Verlauf, levels = c("ld", "ex", "cu", "os"), labels = c("Führung", "Ausbau", "Anschluss", "Ausgleich")),
+                             Zeit = cut(Minute, seq(0, 120, by = 15), right = TRUE))))
+
 # Bestimme Gewinner; berücksichtigt Elferschießen
 games <- games %>% 
   unnest(cols = Tore) %>%
@@ -307,7 +307,7 @@ games_played %>%
          erzielt = sum(c_across(starts_with("erzielt")))) %>% 
   pivot_longer(-c(FIFA, Diff, erzielt), names_to = "Tore", values_to = "Anzahl") -> he
 
-  ggplot(data = he, mapping = aes(x = reorder(reorder(FIFA, -erzielt, sum), -Diff, sum), y = Anzahl)) +
+ggplot(data = he, mapping = aes(x = reorder(reorder(FIFA, -erzielt, sum), -Diff, sum), y = Anzahl)) +
   geom_col(mapping = aes(fill = Tore)) +
   geom_rect(xmin = -Inf, xmax = Inf, ymin = -0.3, ymax = 0.3, fill = "white") +
   geom_point(mapping = aes(x = FIFA, y = Diff), stroke = 2, shape = 4, color = "gold", show.legend = FALSE) +
