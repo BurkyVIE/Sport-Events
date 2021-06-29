@@ -113,7 +113,7 @@ games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standa
                  "2021/7/11/21/0", "Fi Fi", NA, NA, NA, NULL) %>%
   separate(Phase, into = c("Runde", "Phase")) %>% 
   separate(Begegnung, into = c("Heim", "Gast")) %>% 
-  mutate(Anpfiff = lubridate::dmy_hm(Anpfiff, tz = "Europe/Vienna"),
+  mutate(Anpfiff = lubridate::ymf_hm(Anpfiff, tz = "Europe/Vienna"),
          Runde = factor(Runde, levels = c("Gr", "Fi"), labels = c("Vorrunde", "Finale")),
          Phase = factor(Phase, levels = c("T1", "T2", "T3", "F8", "F4", "F2", "Fi"),
                         labels = c("1. Spieltag", "2. Spieltag", "3. Spieltag", "Achtelfinale", "Viertelfinale", "Halbfinale", "Finale")),
