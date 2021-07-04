@@ -104,12 +104,12 @@ games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standa
                  "2021/6/28/21/0", "Fi F8", "fra sui", 3, 3, c("sui 15 reg ld", "fra 57 reg os", "fra 59 reg ld", "fra 75 reg ex", "sui 68 reg cu", "fra 90 reg os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld", "fra NA pen os", "sui NA pen ld"),
                  "2021/6/29/18/0", "Fi F8", "eng ger", 2, 0, c("eng 75 reg ld", "eng 86 reg ex"),
                  "2021/6/29/21/0", "Fi F8", "swe ukr", 1, 2, c("ukr 27 reg ld", "swe 43 reg os", "ukr 120+1 reg ld"),
-                 "2021/7/2/18/0", "Fi F4", "esp sui", NA, NA, NULL,
-                 "2021/7/2/21/0", "Fi F4", "bel ita", NA, NA, NULL,
-                 "2021/7/3/18/0", "Fi F4", "cze den", NA, NA, NULL,
-                 "2021/7/3/21/0", "Fi F4", "ukr eng, NA, NA, NULL,
-                 "2021/7/6/21/0", "Fi F2", NA, NA, NA, NULL,
-                 "2021/7/7/21/0", "Fi F2", NA, NA, NA, NULL,
+                 "2021/7/2/18/0", "Fi F4", "sui esp", 1, 1, c("esp 8 own ld", "sui 68 reg os", "sui NA pen ld", "esp NA pen os", "esp NA pen ld", "esp NA pen ex"),
+                 "2021/7/2/21/0", "Fi F4", "bel ita", 1, 2, c("ita 31 reg ld", "ita 44 reg ex", "bel 45+2 pen cu"),
+                 "2021/7/3/18/0", "Fi F4", "cze den", 1, 2, c("den 5 reg ld", "den 42 reg ex", "cze 49 reg cu"),
+                 "2021/7/3/21/0", "Fi F4", "ukr eng", 0, 4, c("eng 4 reg ld", "eng 46 reg ex", "eng 50 reg ex", "eng 63 reg ex"),
+                 "2021/7/6/21/0", "Fi F2", "ita esp", NA, NA, NULL,
+                 "2021/7/7/21/0", "Fi F2", "eng den", NA, NA, NULL,
                  "2021/7/11/21/0", "Fi Fi", NA, NA, NA, NULL) %>%
   separate(Phase, into = c("Runde", "Phase")) %>% 
   separate(Begegnung, into = c("Heim", "Gast")) %>% 
