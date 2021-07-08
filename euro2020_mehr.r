@@ -82,7 +82,7 @@ games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standa
                  "2021/6/18/18/0", "Gr T2", "cro cze", 1 ,1 ,c("cze 37 pen ld", "cro 47 reg os"),
                  "2021/6/18/21/0", "Gr T2", "eng sco", 0, 0, NULL,
                  "2021/6/19/15/0", "Gr T2", "hun fra", 1, 1, c("hun 45+2 reg ld", "fra 66 reg os"),
-                 "2021/6/19/18/0", "Gr T2", "por ger", 2, 4, c("por 15 reg ld", "ger 35 pen os", "ger 39 pen ld", "ger 51 reg ex", "ger 60 reg ex", "por 67 reg cu"),
+                 "2021/6/19/18/0", "Gr T2", "por ger", 2, 4, c("por 15 reg ld", "ger 35 own os", "ger 39 own ld", "ger 51 reg ex", "ger 60 reg ex", "por 67 reg cu"),
                  "2021/6/19/21/0", "Gr T2", "esp pol", 1, 1, c("esp 25 reg ld", "pol 54 reg os"),
                  "2021/6/20/18/0", "Gr T3", "sui tur", 3, 1, c("sui 6 reg ld", "sui 26 reg ex", "tur 62 reg cu", "sui 68 reg ex"),
                  "2021/6/20/18/0", "Gr T3", "ita wal", 1, 0, "ita 39 reg ld",
@@ -108,9 +108,9 @@ games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standa
                  "2021/7/2/21/0", "Fi F4", "bel ita", 1, 2, c("ita 31 reg ld", "ita 44 reg ex", "bel 45+2 pen cu"),
                  "2021/7/3/18/0", "Fi F4", "cze den", 1, 2, c("den 5 reg ld", "den 42 reg ex", "cze 49 reg cu"),
                  "2021/7/3/21/0", "Fi F4", "ukr eng", 0, 4, c("eng 4 reg ld", "eng 46 reg ex", "eng 50 reg ex", "eng 63 reg ex"),
-                 "2021/7/6/21/0", "Fi F2", "ita esp", NA, NA, NULL,
-                 "2021/7/7/21/0", "Fi F2", "eng den", NA, NA, NULL,
-                 "2021/7/11/21/0", "Fi Fi", NA, NA, NA, NULL) %>%
+                 "2021/7/6/21/0", "Fi F2", "ita esp", 1, 1, c("ita 60 reg ld", "esp 80 reg os", "ita NA pen ld", "esp NA pen os", "ita NA pen ld", "esp NA pen os", "ita NA pen ld", "ita NA pen ex"),
+                 "2021/7/7/21/0", "Fi F2", "eng den", 2, 1, c("den 30 reg ld", "eng 39 own os", "eng 104 reg ld"),
+                 "2021/7/11/21/0", "Fi Fi", "ita eng", NA, NA, NULL) %>%
   separate(Phase, into = c("Runde", "Phase")) %>% 
   separate(Begegnung, into = c("Heim", "Gast")) %>% 
   mutate(Anpfiff = lubridate::ymf_hm(Anpfiff, tz = "Europe/Vienna"),
