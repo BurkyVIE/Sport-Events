@@ -273,7 +273,8 @@ goals %>%
   facet_wrap(~Gruppe) +
   labs(title = "UEFA Euro 2020 - Tore in der Vorrunde") +
   theme_minimal()  +
-  theme(panel.spacing.x = unit(3, "lines")) -> p
+  theme(panel.spacing.x = unit(3, "lines"),
+        panel.grid.minor.y = element_line(linetype = "dashed")) -> p
 windows(16, 9)
 plot(p)
 P3 <- p     
@@ -292,7 +293,8 @@ goals %>%
   facet_wrap(~Runde + Verlauf, ncol = 4, drop = FALSE) +
   labs(title = "UEFA Euro 2020 - Tore nach Verlauf") +
   theme_minimal()  +
-  theme(panel.spacing.x = unit(2, "lines")) -> p
+  theme(panel.spacing.x = unit(2, "lines"),
+        panel.grid.minor.y = element_line(linetype = "dashed")) -> p
 windows(16, 9)
 plot(p)
 P4 <- p     
@@ -326,6 +328,7 @@ ggplot(data = he, mapping = aes(x = reorder(reorder(FIFA, -erzielt, sum), -Diff,
   theme(axis.title.x = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_line(linetype = "dashed"),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         legend.position = "bottom") -> p
