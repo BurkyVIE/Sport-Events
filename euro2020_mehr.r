@@ -125,7 +125,6 @@ games <- tribble(~Anpfiff, ~Phase, ~Begegnung, ~Tore_H, ~Tore_G, ~Tore, # standa
                               Typ = factor(Typ, levels = c("reg", "own", "pen"), labels = c("aus dem Spiel", "Eigentor", "Elfmeter")),
                               Verlauf = factor(Verlauf, levels = c("ld", "ex", "cu", "os"), labels = c("Führung", "Ausbau", "Anschluss", "Ausgleich")),
                               Zeit = cut(Minute, seq(0, 120, by = 15), right = TRUE)))) %>% 
-  arrange(Anpfiff) %>% 
   rowid_to_column(var = "Spiel")
 
 # Bestimme Gewinner; berücksichtigt Elferschießen
