@@ -131,7 +131,7 @@ p <- ggplot(data = SBVenue, mapping = aes(x = Long, y = Lat)) +
                mapping = aes(x = long, y = lat, group = group), fill = "chartreuse3", color = "white", size = 1.25, alpha = .85) +
   geom_polygon(data = map_data("usa"), mapping = aes(x = long, y = lat, group = group), fill = NA, color = "grey50", size = 1.5) +
 #  geom_point(size = 5, color = "black", fill = "red3", shape = 21, alpha = .8) +
-  ggimage::geom_image(image = "fb.svg", size = .02) +
+  ggimage::geom_image(image = "fb_32.png", size = .02) +
   ggrepel::geom_label_repel(data = tmp, mapping = aes(label = No, color = Timeline), size = 3, fontface = "bold", point.padding = 1.5, fill ="beige", alpha = .85) +
   scale_color_manual(values = c("past" = "navy", "future" = "red3")) +
   labs(title = "Super Bowls") +
