@@ -135,7 +135,7 @@ p <- ggplot(data = SBVenue, mapping = aes(x = Long, y = Lat)) +
   ggrepel::geom_label_repel(data = tmp, mapping = aes(label = No, color = Timeline), size = 3, fontface = "bold", point.padding = 1.5, fill ="beige", alpha = .85) +
   scale_color_manual(values = c("past" = "navy", "future" = "red3")) +
   labs(title = "Super Bowls") +
-  coord_map() +
+  coord_map("azequalarea") +
   theme_void() +
   theme(plot.title = element_text(face = "bold", size=14, hjust = 0.5))
 
